@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from models import LoginPayLoad, AuthenticatePayLoad, loginresponse
+from models import LoginPayLoad, AuthenticatePayLoad, login_response
 
 app = FastAPI()
 
@@ -7,10 +7,10 @@ app = FastAPI()
 def main():
     return {"message":"This is the root"}
 
-@app.post("/api/v1/login", response_model=LoginPayLoad, responses=loginresponse)
+@app.post("/api/v1/login", responses=login_response)
 async def login(payload: LoginPayLoad):
     pass
 
 @app.post("/api/v1/auth")
-async def authenticate(payload: AuthenticatePayLoad):
+async def authenticate(payload: AuthenticatePayLoad, response):
     pass
