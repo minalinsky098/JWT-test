@@ -8,11 +8,7 @@ class AuthenticatePayLoad(BaseModel):
     pass
 
 #response_models====================
-class LoginResponseModel(BaseModel):
-    detail: str
-    token: str
-      
-class AuthenticateResponseModel(BaseModel):
+class LoginAuthenticateResponseModel(BaseModel):
     detail: str
     token: str
     
