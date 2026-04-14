@@ -22,12 +22,11 @@ class AuthenticatePayLoad(BaseModel):
 class LoginResponseModel(BaseModel):
     detail: str
     token: str
-    
-    
+      
 class AuthenticateResponseModel(BaseModel):
     detail: str
     token: str
- 
+    
 class GeneralErrorModel(BaseModel):
     detail: str
     
