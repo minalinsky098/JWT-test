@@ -1,15 +1,24 @@
 from pydantic import BaseModel
 
+#payloads
 class LoginPayLoad(BaseModel):
     pass
 
-class AuthenticatePayLoad(LoginPayLoad):
+class AuthenticatePayLoad(BaseModel):
     pass
 
-
-#endpoint responses
+#response_models====================
+class LoginResponseModel(BaseModel):
+    detail: str
+    token: str
+    
+class LoginErrorModel(BaseModel):
+    detail: str
+    
+    
+#responses
 auth_responses = {
-    201: {"detail":"User registered"}, 
+    201: {"detail":"User registered", "token":"jwt-token"}, 
     409: {"detail":"user already in database"}
     }
 
