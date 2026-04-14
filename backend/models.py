@@ -1,16 +1,5 @@
 from pydantic import BaseModel
 
-def error_parser(model, description, example):
-    return {
-        "description":description, 
-        "content":{
-            "application/json": {
-                "schema": model.model_json_schema(),
-                "example": {"detail":example}
-                }
-            }
-        }  
-
 #payloads
 class LoginPayLoad(BaseModel):
     pass
@@ -31,10 +20,16 @@ class GeneralErrorModel(BaseModel):
     detail: str
     
 #responses
+general_response = {
+    500: {"model": GeneralErrorModel, "description": "General Error"}
+}
+
 auth_responses = {
-    409: error_parser(GeneralErrorModel, "Authentication Error", "User is in database already")
+    **general_response,
+    409:{"model":GeneralErrorModel, "description":"Authentication Error"}
     }
 
 login_responses = {
-    401: error_parser(GeneralErrorModel, "Invalid credentials", "invalid username or password")
+    **general_response,
+    401: {"model":GeneralErrorModel, "description":"Invalid credentials"}
     }
