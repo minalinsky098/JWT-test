@@ -8,8 +8,12 @@ class AuthenticatePayLoad(LoginPayLoad):
 
 
 #endpoint responses
-login_response = {
+auth_responses = {
     201: {"detail":"User registered"}, 
-    401: {"description":"Invalid credentials"},
     409: {"detail":"user already in database"}
     }
+
+login_responses = {
+    200: {"detail":"User logged in"},
+    401: {"description":"Invalid credentials"}
+}
