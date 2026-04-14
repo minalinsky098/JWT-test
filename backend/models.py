@@ -28,7 +28,6 @@ def error_parser(model, description, example):
     
 #responses
 auth_responses = {
-    201: {"detail":"User registered", "token":"jwt-token"}, 
     409: {"detail":"user already in database"}
     }
 
