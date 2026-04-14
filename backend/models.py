@@ -15,6 +15,16 @@ class LoginResponseModel(BaseModel):
 class LoginErrorModel(BaseModel):
     detail: str
     
+def error_parser(model, description, example):
+    return {
+        "description":description, 
+        "content":{
+            "application/json": {
+                "schema": model.model_json_schema(),
+                "example": {"detail":example}
+                }
+            }
+        }  
     
 #responses
 auth_responses = {
@@ -23,6 +33,6 @@ auth_responses = {
     }
 
 login_responses = {
-    200: {"detail":"User logged in"},
-    401: {"description":"Invalid credentials"}
-}
+    401: error_parser(LoginErrorModel, "Invalid credentials", "invalid username or password")
+    }
+
