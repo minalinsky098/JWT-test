@@ -14,7 +14,7 @@ class LoginAuthenticateResponseModel(BaseModel):
     token: str
     
 class GetAllUsersResponseModel(BaseModel):
-    all_users: List[str]   
+    all_users: List[str|None]
 
 #error_models===========    
 class GeneralErrorModel(BaseModel):
