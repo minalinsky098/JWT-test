@@ -1,16 +1,24 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from typing import List, Dict, Any
+
 
 #payloads=====================
 class LoginPayLoad(BaseModel):
     pass
 
-class AuthenticatePayLoad(BaseModel):
-    pass
+class RegisterPayLoad(BaseModel):
+    name: str
+    password: str
+    email: str
+    
+    @field_validator("email")
+    @classmethod
+    def check_valid_email(cls, v):
+        if "@" not in v:
+            raise ValueError("Please enter a valid email address")
+        return v
 
 #response_models====================
-
-
 class LoginAuthenticateResponseModel(BaseModel): #200/201
     detail: str
     token: str
