@@ -6,6 +6,7 @@ import asyncpg
 load_dotenv()
 DATABASEURL = os.getenv("DATABASE_URL")
 
+#wrapper that returns a connection pool to a function
 def get_connection_pool(func):
     async def wrapper(*args, **kwargs):
         async with asyncpg.create_pool(DATABASEURL) as pool:
