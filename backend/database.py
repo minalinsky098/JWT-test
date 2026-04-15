@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from dberrormodel import DatabaseError
+from execptions import DatabaseError
 import os
 import asyncpg
 

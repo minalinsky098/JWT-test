@@ -9,7 +9,9 @@ class AuthenticatePayLoad(BaseModel):
     pass
 
 #response_models====================
-class LoginAuthenticateResponseModel(BaseModel):
+
+
+class LoginAuthenticateResponseModel(BaseModel): #200/201
     detail: str
     token: str
     
@@ -17,7 +19,7 @@ class GetAllUsersResponseModel(BaseModel):
     all_users: List[str|None]
 
 #error_models===========    
-class GeneralErrorModel(BaseModel):
+class GeneralErrorModel(BaseModel): #500
     detail: str
     
 #responses
