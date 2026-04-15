@@ -16,10 +16,8 @@ DATABASEURL = os.getenv("DATABASE_URL")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    async with asyncpg.create_pool(DATABASEURL) as pool:
-        app.state.db_pool = pool
-        async with pool.acquire() as conn:
-            yield
+    async with asyncpg.create_pool(DATABASEURL) as app.state.db_pool:
+        yield
             
 async def get_db_conn(request: Request):
     async with request.app.state.db_pool.acquire() as conn:
