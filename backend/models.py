@@ -1,6 +1,7 @@
 from pydantic import BaseModel
+from typing import List
 
-#payloads
+#payloads=====================
 class LoginPayLoad(BaseModel):
     pass
 
@@ -12,6 +13,10 @@ class LoginAuthenticateResponseModel(BaseModel):
     detail: str
     token: str
     
+class GetAllUsersResponseModel(BaseModel):
+    all_users: List[str]   
+
+#error_models===========    
 class GeneralErrorModel(BaseModel):
     detail: str
     
@@ -29,3 +34,7 @@ login_responses = {
     **general_response,
     401: {"model":GeneralErrorModel, "description":"Invalid credentials"}
     }
+
+get_all_users_responses = {
+    **general_response
+}

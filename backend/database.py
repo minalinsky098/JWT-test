@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
+from dberrormodel import DatabaseError
 import os
-import asyncio
 import asyncpg
 
 load_dotenv()
@@ -14,11 +14,18 @@ def get_connection_pool(func):
                 return await func(conn, *args, **kwargs)
     return wrapper
 
-@get_connection_pool
-async def main(conn):
-    rows = await conn.fetch("SELECT * FROM users")
-    print(rows)
-    print("Connected successfully!")
+def catch_database_error(func):
+    async def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            raise DatabaseError from e
+    return wrapper
 
-asyncio.run(main())
+@catch_database_error
+@get_connection_pool
+async def select_all_users(conn):
+    rows = await conn.fetch("SELECT * FROM users")
+    return rows
+
 
