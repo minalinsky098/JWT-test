@@ -3,7 +3,7 @@ from models import LoginPayLoad ,AuthenticatePayLoad\
 ,LoginAuthenticateResponseModel, GetAllUsersResponseModel\
 ,auth_responses, login_responses, get_all_users_responses
 from database import select_all_users
-from execptions import DatabaseError
+from exceptions import DatabaseError
 
 app = FastAPI()
 
