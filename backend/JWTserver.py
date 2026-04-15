@@ -35,7 +35,7 @@ async def login_user(payload: LoginPayLoad):
 
 @app.post("/api/v1/register", status_code = 201, response_model = LoginAuthenticateResponseModel, responses = auth_responses)
 async def register_user(payload: RegisterPayLoad):
-    pass
+    return {"detail": "AHHH","token": "randomtoken"}
 
 @app.get("/api/v1/users", status_code = 200, response_model=GetAllUsersResponseModel, responses = get_all_users_responses)
 async def get_users(connection = Depends(get_db_conn)):
