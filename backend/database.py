@@ -12,6 +12,9 @@ def catch_database_error(func):
 @catch_database_error
 async def select_all_users(conn):
     rows = await conn.fetch("SELECT * FROM users")
-    return rows
+    return [dict(row) for row in rows]
 
+@catch_database_error
+async def create_new_user(conn):
+    row = await conn.fetch("INSERT INTO users()")
 

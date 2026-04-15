@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Dict, Any
 
 #payloads=====================
 class LoginPayLoad(BaseModel):
@@ -16,7 +16,7 @@ class LoginAuthenticateResponseModel(BaseModel): #200/201
     token: str
     
 class GetAllUsersResponseModel(BaseModel):
-    all_users: List[str|None]
+    all_users: List[Dict[str, Any]]
 
 #error_models===========    
 class GeneralErrorModel(BaseModel): #500

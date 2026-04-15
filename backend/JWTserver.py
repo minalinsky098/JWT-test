@@ -41,6 +41,6 @@ async def register_user(payload: AuthenticatePayLoad):
 async def get_users(connection = Depends(get_db_conn)):
     try:
         users = await select_all_users(connection)
-        return {"all_users":users}
+        return {"all_users": users}
     except DatabaseError as e: #check for logging remove during prod
         raise HTTPException(status_code=500, detail=f"Server error: {e}")
