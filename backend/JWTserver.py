@@ -1,6 +1,13 @@
 from fastapi import FastAPI, HTTPException, Request, Depends
 from contextlib import asynccontextmanager
 import asyncpg
+import logging
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 from models import LoginPayLoad ,RegisterPayLoad\
 ,LoginAuthenticateResponseModel, GetAllUsersResponseModel\
@@ -37,16 +44,18 @@ async def register_user(payload: RegisterPayLoad, connection = Depends(get_db_co
             raise HTTPException(status_code = 409, detail = "This person already registered")
         row = await create_new_user(payload.first_name, payload.last_name, payload.password, payload.email, connection)
         token = generate_jwt(row["id"])
-        return {"detail": "AHHH","token": token}
+        return {"detail": "Successfully registered","token": token}
     except HTTPException:
         raise
-    except DatabaseError as e: #check for logging remove during prod
-        raise HTTPException(status_code=500, detail=f"Server error: {e}")
+    except DatabaseError as e:
+        logger.error(str(e))
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 @app.get("/api/v1/users", status_code = 200, response_model=GetAllUsersResponseModel, responses = get_all_users_responses)
 async def get_users(connection = Depends(get_db_conn)):
     try:
         users = await select_all_users(connection)
         return {"all_users": users}
-    except DatabaseError as e: #check for logging remove during prod
-        raise HTTPException(status_code=500, detail=f"Server error: {e}")
+    except DatabaseError as e: 
+        logger.error(str(e))
+        raise HTTPException(status_code=500, detail="Internal server error")
