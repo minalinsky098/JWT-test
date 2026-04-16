@@ -13,8 +13,8 @@ class RegisterPayLoad(BaseModel):
     @field_validator("email")
     @classmethod
     def check_valid_email(cls, v):
-        if "@" not in v:
-            raise ValueError("Please enter a valid email address")
+        if "@gmail.com" not in v:
+            raise ValueError("Please enter a valid gmail address")
         return v
 
 #=========================================================
