@@ -17,8 +17,11 @@ def catch_database_error(func):
     return wrapper
 
 #converts the fetch list of records into list of dicts 
-def convert_row(records):
+def convert_fetch(records):
     return [dict(record) for record in records]
+
+def convert_fetchrow(record):
+    return dict(record)
 
 @catch_database_error
 async def select_all_users(conn):
@@ -26,9 +29,11 @@ async def select_all_users(conn):
     rows = convert_row(rows)
     return rows
 
+
+
 @catch_database_error
-async def create_new_user(conn, first_name, last_name, password, email):
-    hashed_password = hash_password(password)
+async def create_new_user(first_name, last_name, password, email, conn):
+    hashed_password = await hash_password(password)
     print(password, type(password))
     row = await conn.fetchrow(
         """
@@ -37,4 +42,4 @@ async def create_new_user(conn, first_name, last_name, password, email):
         RETURNING *
         """, first_name, last_name, hashed_password, email
         )
-    return convert_row(row)
+    return convert_fetchrow(row)

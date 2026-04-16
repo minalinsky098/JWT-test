@@ -7,7 +7,7 @@ import asyncpg
 from models import LoginPayLoad ,RegisterPayLoad\
 ,LoginAuthenticateResponseModel, GetAllUsersResponseModel\
 ,auth_responses, login_responses, get_all_users_responses
-from database import select_all_users
+from database import select_all_users, create_new_user
 from exceptions import DatabaseError
 
 
@@ -34,8 +34,9 @@ async def login_user(payload: LoginPayLoad):
     pass
 
 @app.post("/api/v1/register", status_code = 201, response_model = LoginAuthenticateResponseModel, responses = auth_responses)
-async def register_user(payload: RegisterPayLoad):
-    
+async def register_user(payload: RegisterPayLoad, connection = Depends(get_db_conn)):
+    row = await create_new_user(payload.first_name, payload.last_name, payload.password, payload.email, connection)
+    print(row, type(row))
     return {"detail": "AHHH","token": "randomtoken"}
 
 @app.get("/api/v1/users", status_code = 200, response_model=GetAllUsersResponseModel, responses = get_all_users_responses)
