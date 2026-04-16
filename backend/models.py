@@ -14,9 +14,10 @@ class RegisterPayLoad(BaseModel):
     @field_validator("email")
     @classmethod
     def check_valid_email(cls, v):
-        if "@gmail.com" not in v.strip().lower():
+        cleaned_v = v.strip().lower()
+        if "@gmail.com" not in cleaned_v:
             raise ValueError("Please enter a valid gmail address")
-        return v
+        return cleaned_v
 
 #=========================================================
 #response_models
