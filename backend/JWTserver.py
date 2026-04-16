@@ -3,12 +3,6 @@ from contextlib import asynccontextmanager
 import asyncpg
 import logging
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s"
-)
-
 from models import LoginPayLoad ,RegisterPayLoad\
 ,LoginAuthenticateResponseModel, GetAllUsersResponseModel\
 ,auth_responses, login_responses, get_all_users_responses
@@ -16,7 +10,6 @@ from database import select_all_users, create_new_user, select_user
 from exceptions import DatabaseError
 from utils import generate_jwt\
 ,DATABASEURL
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -28,6 +21,12 @@ async def get_db_conn(request: Request):
         yield conn
         
 app = FastAPI(lifespan=lifespan)
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 @app.get("/")
 def main():
