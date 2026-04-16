@@ -22,7 +22,6 @@ def generate_jwt(user_id):
     current_time = datetime.now(timezone.utc)
     expiry_time = current_time + timedelta(minutes=5)
     jwt_token = jwt.encode({"user_id": str(user_id), "exp": expiry_time}, SECRET, ALGORITHM)
-    print(jwt_token)
     return jwt_token
     
 #asyncio.run(hash_password("THIS PASSWORD"))
