@@ -6,7 +6,8 @@ class LoginPayLoad(BaseModel):
     pass
 
 class RegisterPayLoad(BaseModel):
-    name: str
+    first_name: str
+    last_name: str
     password: str
     email: str
     
