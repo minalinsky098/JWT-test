@@ -7,7 +7,8 @@ from models import LoginPayLoad ,RegisterPayLoad\
 ,auth_responses, login_responses, get_all_users_responses
 from database import select_all_users, create_new_user, select_user
 from exceptions import DatabaseError
-from utils import DATABASEURL
+from utils import generate_jwt\
+,DATABASEURL
 
 
 @asynccontextmanager
@@ -35,8 +36,8 @@ async def register_user(payload: RegisterPayLoad, connection = Depends(get_db_co
         if (await select_user(payload.email, connection)):
             raise HTTPException(status_code = 409, detail = "This person already registered")
         row = await create_new_user(payload.first_name, payload.last_name, payload.password, payload.email, connection)
-        print(row, type(row))
-        return {"detail": "AHHH","token": "randomtoken"}
+        token = generate_jwt(row["id"])
+        return {"detail": "AHHH","token": token}
     except HTTPException:
         raise
     except DatabaseError as e: #check for logging remove during prod
