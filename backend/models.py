@@ -1,5 +1,5 @@
 from pydantic import BaseModel, field_validator
-from typing import List, Dict
+from typing import List, Dict, Any
 
 #payloads
 class LoginPayLoad(BaseModel):
@@ -25,7 +25,7 @@ class LoginAuthenticateResponseModel(BaseModel): #200/201
     token: str
     
 class GetAllUsersResponseModel(BaseModel):
-    all_users: List[Dict[str, None]]
+    all_users: List[Dict[str, Any]]
 
 #================================================
 #error_models  
