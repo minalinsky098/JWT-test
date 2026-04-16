@@ -1,5 +1,5 @@
 from pydantic import BaseModel, field_validator
-from typing import List, Dict, Any
+from typing import List, Dict
 
 #payloads
 class LoginPayLoad(BaseModel):
@@ -14,7 +14,7 @@ class RegisterPayLoad(BaseModel):
     @field_validator("email")
     @classmethod
     def check_valid_email(cls, v):
-        if "@gmail.com" not in v:
+        if "@gmail.com" not in v.strip().lower():
             raise ValueError("Please enter a valid gmail address")
         return v
 
@@ -25,7 +25,7 @@ class LoginAuthenticateResponseModel(BaseModel): #200/201
     token: str
     
 class GetAllUsersResponseModel(BaseModel):
-    all_users: List[Dict[str, Any]]
+    all_users: List[Dict[str, None]]
 
 #================================================
 #error_models  
