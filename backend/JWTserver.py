@@ -1,7 +1,5 @@
 from fastapi import FastAPI, HTTPException, Request, Depends
 from contextlib import asynccontextmanager
-from dotenv import load_dotenv
-import os
 import asyncpg
 
 from models import LoginPayLoad ,RegisterPayLoad\
@@ -9,10 +7,8 @@ from models import LoginPayLoad ,RegisterPayLoad\
 ,auth_responses, login_responses, get_all_users_responses
 from database import select_all_users, create_new_user, select_user
 from exceptions import DatabaseError
+from utils import DATABASEURL
 
-
-load_dotenv()
-DATABASEURL = os.getenv("DATABASE_URL")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
