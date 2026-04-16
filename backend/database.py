@@ -30,6 +30,7 @@ async def select_all_users(conn):
     rows = convert_fetch(rows)
     return rows
 
+@catch_database_error
 async def select_user(email, conn):
     row = convert_fetchrow(await conn.fetchrow("SELECT * FROM users WHERE email = ($1)", email))
     return row    
