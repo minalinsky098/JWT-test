@@ -1,5 +1,6 @@
 from exceptions import DatabaseError
 from utils import hash_password
+from JWTserver import logger
 
 """
 REMINDER always typecast your data as asyncpg returns a record object
@@ -12,7 +13,7 @@ def catch_database_error(func):
         try:
             return await func(*args, **kwargs)
         except Exception as e:
-            print(e)
+            logger.error(str(e))
             raise DatabaseError from e
     return wrapper
 
