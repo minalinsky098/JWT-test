@@ -20,7 +20,7 @@ def catch_database_error(func):
         try:
             return await func(*args, **kwargs)
         except Exception as e:
-            logger.error(str(e))
+            logger.exception(str(e))
             raise DatabaseError from e
     return wrapper
 
