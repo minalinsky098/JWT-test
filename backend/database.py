@@ -18,16 +18,10 @@ def catch_database_error(func):
 
 #converts the fetch list of records into list of dicts 
 def convert_fetch(records):
-    if records:
-        return [dict(record) for record in records]
-    else:
-        return []
+    return [dict(record) for record in records]
 
 def convert_fetchrow(record):
-    if record:
-        return dict(record) 
-    else: 
-        return dict()
+    return dict(record) if record else None
 
 @catch_database_error
 async def select_all_users(conn):
