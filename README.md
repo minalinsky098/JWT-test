@@ -13,4 +13,5 @@ git merge <branch name> - merges the current sitting branch to the specified bra
 git checkout <branch name> - goes to specified branch name
 git switch <branch name> - creates, switch branches
 git branch - allows branch operations
+git fetch --prune - syncs your local and remote branches
 ```
