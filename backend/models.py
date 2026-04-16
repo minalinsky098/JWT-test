@@ -1,24 +1,34 @@
-from pydantic import BaseModel
-from typing import List
+from pydantic import BaseModel, field_validator
+from typing import List, Dict, Any
 
-#payloads=====================
+#payloads
 class LoginPayLoad(BaseModel):
     pass
 
-class AuthenticatePayLoad(BaseModel):
-    pass
+class RegisterPayLoad(BaseModel):
+    first_name: str
+    last_name: str
+    password: str
+    email: str
+    
+    @field_validator("email")
+    @classmethod
+    def check_valid_email(cls, v):
+        if "@gmail.com" not in v:
+            raise ValueError("Please enter a valid gmail address")
+        return v
 
-#response_models====================
-
-
+#=========================================================
+#response_models
 class LoginAuthenticateResponseModel(BaseModel): #200/201
     detail: str
     token: str
     
 class GetAllUsersResponseModel(BaseModel):
-    all_users: List[str|None]
+    all_users: List[Dict[str, Any]]
 
-#error_models===========    
+#================================================
+#error_models  
 class GeneralErrorModel(BaseModel): #500
     detail: str
     

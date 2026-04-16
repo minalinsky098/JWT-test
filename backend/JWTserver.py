@@ -1,18 +1,15 @@
 from fastapi import FastAPI, HTTPException, Request, Depends
 from contextlib import asynccontextmanager
-from dotenv import load_dotenv
-import os
 import asyncpg
+import logging
 
-from models import LoginPayLoad ,AuthenticatePayLoad\
+from models import LoginPayLoad ,RegisterPayLoad\
 ,LoginAuthenticateResponseModel, GetAllUsersResponseModel\
 ,auth_responses, login_responses, get_all_users_responses
-from database import select_all_users
+from database import select_all_users, create_new_user, select_user
 from exceptions import DatabaseError
-
-
-load_dotenv()
-DATABASEURL = os.getenv("DATABASE_URL")
+from utils import generate_jwt\
+,DATABASEURL
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -25,6 +22,12 @@ async def get_db_conn(request: Request):
         
 app = FastAPI(lifespan=lifespan)
 
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
 @app.get("/")
 def main():
     return {"message":"This is the root"}
@@ -34,13 +37,24 @@ async def login_user(payload: LoginPayLoad):
     pass
 
 @app.post("/api/v1/register", status_code = 201, response_model = LoginAuthenticateResponseModel, responses = auth_responses)
-async def register_user(payload: AuthenticatePayLoad):
-    pass
+async def register_user(payload: RegisterPayLoad, connection = Depends(get_db_conn)):
+    try:
+        if (await select_user(payload.email, connection)):
+            raise HTTPException(status_code = 409, detail = "This person already registered")
+        row = await create_new_user(payload.first_name, payload.last_name, payload.password, payload.email, connection)
+        token = generate_jwt(row["id"])
+        return {"detail": "Successfully registered","token": token}
+    except HTTPException:
+        raise
+    except DatabaseError as e:
+        logger.error(str(e))
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 @app.get("/api/v1/users", status_code = 200, response_model=GetAllUsersResponseModel, responses = get_all_users_responses)
 async def get_users(connection = Depends(get_db_conn)):
     try:
         users = await select_all_users(connection)
-        return {"all_users":users}
-    except DatabaseError as e: #check for logging remove during prod
-        raise HTTPException(status_code=500, detail=f"Server error: {e}")
+        return {"all_users": users}
+    except DatabaseError as e: 
+        logger.error(str(e))
+        raise HTTPException(status_code=500, detail="Internal server error")
