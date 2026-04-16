@@ -26,7 +26,7 @@ def convert_fetchrow(record):
 
 @catch_database_error
 async def select_all_users(conn):
-    rows = await conn.fetch("SELECT * FROM users")
+    rows = await conn.fetch("SELECT first_name, last_name, email FROM users")
     rows = convert_fetch(rows)
     return rows
 
@@ -41,7 +41,7 @@ async def create_new_user(first_name, last_name, password, email, conn):
         """
         INSERT INTO users(first_name, last_name, hashed_password, email)
         VALUES ($1, $2, $3, $4)
-        RETURNING *
+        RETURNING first_name, last_name, email 
         """, first_name, last_name, hashed_password, email
         )
     return convert_fetchrow(row)
