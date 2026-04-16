@@ -1,9 +1,6 @@
 # JWT-test
 Practice repository to implement JWT in a loginpage
 
-# JWT-test
-Practice repository to implement JWT in a loginpage
-
 # GITHUB/GIT practice repo
 Also a repository where I practice how to utilize github and git
 Practice basic git commands: git push, git pull, git merge, git branch, git checkout,
