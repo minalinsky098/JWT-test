@@ -1,11 +1,18 @@
 from exceptions import DatabaseError
 from utils import hash_password
-from JWTserver import logger
+import logging
 
 """
 REMINDER always typecast your data as asyncpg returns a record object
 and not a dictionary when using GET returns a [<record object>, <record object>]
 """
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
 
 def catch_database_error(func):
     

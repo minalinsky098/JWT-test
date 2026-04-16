@@ -1,12 +1,11 @@
 from fastapi import FastAPI, HTTPException, Request, Depends
 from contextlib import asynccontextmanager
 import asyncpg
-import logging
 
 from models import LoginPayLoad ,RegisterPayLoad\
 ,LoginAuthenticateResponseModel, GetAllUsersResponseModel\
 ,auth_responses, login_responses, get_all_users_responses
-from database import select_all_users, create_new_user, select_user
+from database import logger, select_all_users, create_new_user, select_user
 from exceptions import DatabaseError
 from utils import generate_jwt\
 ,DATABASEURL
@@ -22,11 +21,6 @@ async def get_db_conn(request: Request):
         
 app = FastAPI(lifespan=lifespan)
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s"
-)
 
 @app.get("/")
 def main():
