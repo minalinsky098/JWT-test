@@ -1,6 +1,12 @@
 from exceptions import DatabaseError
 
+"""
+REMINDER always typecast your data as asyncpg returns a record object
+and not a dictionary when using GET returns a [<record object>, <record object>]
+"""
+
 def catch_database_error(func):
+    
     async def wrapper(*args, **kwargs):
         try:
             return await func(*args, **kwargs)
