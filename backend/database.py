@@ -36,7 +36,6 @@ async def select_user(email, conn):
 @catch_database_error
 async def create_new_user(first_name, last_name, password, email, conn):
     hashed_password = await hash_password(password)
-    print(password, type(password))
     row = await conn.fetchrow(
         """
         INSERT INTO users(first_name, last_name, hashed_password, email)
