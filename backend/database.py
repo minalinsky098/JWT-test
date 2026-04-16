@@ -26,10 +26,13 @@ def convert_fetchrow(record):
 @catch_database_error
 async def select_all_users(conn):
     rows = await conn.fetch("SELECT * FROM users")
-    rows = convert_row(rows)
+    rows = convert_fetch(rows)
     return rows
 
-
+async def select_user(email, conn):
+    row = convert_fetchrow(await conn.fetchrow("SELECT * FROM users WHERE email = ($1)", email))
+    return row
+    
 
 @catch_database_error
 async def create_new_user(first_name, last_name, password, email, conn):

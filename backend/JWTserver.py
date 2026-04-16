@@ -7,7 +7,7 @@ import asyncpg
 from models import LoginPayLoad ,RegisterPayLoad\
 ,LoginAuthenticateResponseModel, GetAllUsersResponseModel\
 ,auth_responses, login_responses, get_all_users_responses
-from database import select_all_users, create_new_user
+from database import select_all_users, create_new_user, select_user
 from exceptions import DatabaseError
 
 
@@ -35,9 +35,16 @@ async def login_user(payload: LoginPayLoad):
 
 @app.post("/api/v1/register", status_code = 201, response_model = LoginAuthenticateResponseModel, responses = auth_responses)
 async def register_user(payload: RegisterPayLoad, connection = Depends(get_db_conn)):
-    row = await create_new_user(payload.first_name, payload.last_name, payload.password, payload.email, connection)
-    print(row, type(row))
-    return {"detail": "AHHH","token": "randomtoken"}
+    try:
+        if (await select_user(payload.email, connection)):
+            raise HTTPException(status_code = 409, detail = "This person already registered")
+        row = await create_new_user(payload.first_name, payload.last_name, payload.password, payload.email, connection)
+        print(row, type(row))
+        return {"detail": "AHHH","token": "randomtoken"}
+    except HTTPException:
+        raise
+    except DatabaseError as e: #check for logging remove during prod
+        raise HTTPException(status_code=500, detail=f"Server error: {e}")
 
 @app.get("/api/v1/users", status_code = 200, response_model=GetAllUsersResponseModel, responses = get_all_users_responses)
 async def get_users(connection = Depends(get_db_conn)):
