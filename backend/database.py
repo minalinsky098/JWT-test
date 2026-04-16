@@ -49,7 +49,7 @@ async def create_new_user(first_name, last_name, password, email, conn):
         """
         INSERT INTO users(first_name, last_name, hashed_password, email)
         VALUES ($1, $2, $3, $4)
-        RETURNING first_name, last_name, email 
+        RETURNING id, first_name, last_name, email 
         """, first_name, last_name, hashed_password, email
         )
     return convert_fetchrow(row)
