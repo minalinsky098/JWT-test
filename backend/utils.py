@@ -13,7 +13,7 @@ ALGORITHM = os.getenv("JWTALGORITHM")
 async def hash_password(password: str):
     byte_pass = password.encode()
     hashed = await aiobcrypt.hashpw(byte_pass, await aiobcrypt.gensalt())
-    return str(hashed)
+    return hashed.decode()
     
 async def check_password(password: str):
     pass

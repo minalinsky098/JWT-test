@@ -1,5 +1,6 @@
 from exceptions import DatabaseError
 from utils import hash_password
+from JWTserver import logger
 
 """
 REMINDER always typecast your data as asyncpg returns a record object
@@ -12,7 +13,7 @@ def catch_database_error(func):
         try:
             return await func(*args, **kwargs)
         except Exception as e:
-            print(e)
+            logger.error(str(e))
             raise DatabaseError from e
     return wrapper
 
@@ -25,10 +26,11 @@ def convert_fetchrow(record):
 
 @catch_database_error
 async def select_all_users(conn):
-    rows = await conn.fetch("SELECT * FROM users")
+    rows = await conn.fetch("SELECT first_name, last_name, email FROM users")
     rows = convert_fetch(rows)
     return rows
 
+@catch_database_error
 async def select_user(email, conn):
     row = convert_fetchrow(await conn.fetchrow("SELECT * FROM users WHERE email = ($1)", email))
     return row    
@@ -40,7 +42,7 @@ async def create_new_user(first_name, last_name, password, email, conn):
         """
         INSERT INTO users(first_name, last_name, hashed_password, email)
         VALUES ($1, $2, $3, $4)
-        RETURNING *
+        RETURNING first_name, last_name, email 
         """, first_name, last_name, hashed_password, email
         )
     return convert_fetchrow(row)
