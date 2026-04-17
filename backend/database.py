@@ -15,7 +15,6 @@ logging.basicConfig(
 
 
 def catch_database_error(func):
-    
     async def wrapper(*args, **kwargs):
         try:
             return await func(*args, **kwargs)
@@ -29,7 +28,7 @@ def convert_fetch(records):
     return [dict(record) for record in records]
 
 def convert_fetchrow(record):
-    return dict(record) if record else None
+    return dict(record) if record else None 
 
 @catch_database_error
 async def select_all_users(conn):
