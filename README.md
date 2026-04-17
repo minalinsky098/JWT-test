@@ -16,15 +16,13 @@ Practice basic git commands:
 
 Examples:
 
-```
-"git push -u origin <branch name>" - pushes to remote and sets upstream(tracking) to remote
-"git push origin -d <branch name>" - deletes remote branch
-"git pull origin main" - pulls the origin(remote) main to local main
-"git merge <branch name>" - merges the current sitting branch to the specified branch
-"git checkout <branch name>" - goes to specified branch name
-"git switch <branch name>" - creates, switch branches
-"git branch" - shows all branches 
-"git branch -d <branch name>" - deletes branch 
-"git branch -vv" - checks the upstream of branch
-"git fetch --prune" - syncs your local and remote branches
-```
+- `git push -u origin <branch name>` — pushes to remote and sets upstream (tracking) to remote
+- `git push origin -d <branch name>` — deletes remote branch
+- `git pull origin main` — pulls the origin (remote) `main` to local `main`
+- `git merge <branch name>` — merges the specified branch into the current branch
+- `git checkout <branch name>` — switch to the specified branch
+- `git switch <branch name>` — create and/or switch branches
+- `git branch` — shows all branches
+- `git branch -d <branch name>` — deletes a local branch
+- `git branch -vv` — shows branch upstream and last commit
+- `git fetch --prune` — syncs your local and remote branches
