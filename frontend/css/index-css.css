@@ -1,0 +1,58 @@
+/* * {
+    border: 1px solid black;
+} */
+body{
+    background: #FCE7D9;
+}
+main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid red;
+    text-align: center;
+    min-height: 50vh;
+}
+
+main h1{
+    font-size: 2rem;
+    border: 1px solid red;
+}
+
+.loginForm{
+  background: #eeeee4;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
+  border: 5px solid #cccccc;
+  border-radius: 12px; /* rounded corners */
+  padding: 2rem;
+  min-height: 50vh;
+  min-width: 50vh;
+}
+
+header{
+    background: transparent;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    border: 1px solid red;
+}
+.leftlogo{
+    text-align: left;
+    flex: 1;
+}
+.title{
+    flex: 1;
+    text-align: center;
+}
+.rightlogo{
+    flex: 1;
+    align-items: right;
+    text-align: right;
+}
+header img{
+    width: 12rem;
+    height: 12rem
+}
+header h1{
+    font-size: 4rem;
+}
