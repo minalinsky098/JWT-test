@@ -77,7 +77,7 @@ async def register_user(payload: RegisterPayLoad, connection = Depends(get_db_co
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
-@app.get("/api/v1/users", status_code = 200, response_model=GetAllUsersResponseModel, responses = get_all_users_responses)
+@app.get("/api/v1/users/all", status_code = 200, response_model=GetAllUsersResponseModel, responses = get_all_users_responses)
 async def get_users(connection = Depends(get_db_conn)):
     try:
         users = await select_all_users(connection)
@@ -85,3 +85,7 @@ async def get_users(connection = Depends(get_db_conn)):
     except DatabaseError as e: 
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal server error")
+    
+@app.get("/api/v1/users", status_code=200)
+async def get_user(user_id = Depends(get_user_id), connection=Depends(get_db_conn)):
+    return {"message": f"Hello{user_id}"}
