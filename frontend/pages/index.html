@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cutecats</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/index-css.css" />
 </head>
 <body>
@@ -23,8 +24,15 @@
         <div class="loginForm">
             <form>
                 <h1>LOGIN</h1>
-                <input id="Username" placeholder="Hello">
-                <label for="Username">username</label>
+                <div class="login-group">
+                    <label for="email">Email</label>
+                    <input id="email" placeholder="myemail@gmailcom">
+                </div>
+                <div class="login-group">
+                    <label for="password">Password</label>
+                    <input id="password" placeholder="mypassword">
+                </div>
+                <button>Submit</button>
             </form>
         </div>
     </main>
