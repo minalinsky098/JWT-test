@@ -26,12 +26,7 @@ def generate_jwt(user_id):
     return jwt_token
 
 def get_user_id(token):
-    try:
-        decoded = jwt.decode(token, SECRET, ALGORITHM)
-        return decoded["user_id"]
-    except jwt.ExpiredSignatureError:
-        raise
-    except jwt.InvalidTokenError:
-        raise
+    decoded = jwt.decode(token, SECRET, ALGORITHM)
+    return decoded["user_id"]
     
 #asyncio.run(hash_password("THIS PASSWORD"))
