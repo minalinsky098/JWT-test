@@ -1,11 +1,13 @@
 from fastapi import FastAPI, HTTPException, Request, Depends
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from contextlib import asynccontextmanager
 import asyncpg
+import jwt
 
 from models import LoginPayLoad ,RegisterPayLoad\
 ,LoginAuthenticateResponseModel, GetAllUsersResponseModel\
 ,auth_responses, login_responses, get_all_users_responses
-from database import logger, select_all_users, create_new_user, select_user, verfify_user
+from database import logger, select_all_users, create_new_user, select_user, check_password
 from exceptions import DatabaseError
 from utils import generate_jwt, check_password, get_jwt_user_id\
 ,DATABASEURL
@@ -19,8 +21,21 @@ async def get_db_conn(request: Request):
     async with request.app.state.db_pool.acquire() as conn:
         yield conn
         
+async def get_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False))):
+    try:
+        if not authorization:
+            raise HTTPException(status_code=401, detail="No credentials provided")
+        user_id = get_jwt_user_id(authorization.token)
+        return user_id
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="User has been logged out automatically")
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Token is malformed")
+    except Exception as e:
+        logger.error(str(e))
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+        
 app = FastAPI(lifespan=lifespan)
-
 
 @app.get("/")
 def main():
