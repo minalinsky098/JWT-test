@@ -25,7 +25,7 @@ async def get_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTP
     try:
         if not authorization:
             raise HTTPException(status_code=401, detail="No credentials provided")
-        user_id = get_jwt_user_id(authorization.token)
+        user_id = get_jwt_user_id(authorization.credentials)
         return user_id
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="User has been logged out automatically")
