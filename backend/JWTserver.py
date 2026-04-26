@@ -32,10 +32,10 @@ async def login_user(payload: LoginPayLoad, connection = Depends(get_db_conn)):
         user = await select_user(payload.email, connection)
         if not(user):
             raise HTTPException(status_code = 401, detail = "User is not registered")
-        if not (await check_password(payload.password, user["password"])):
+        if not (await check_password(payload.password, user["hashed_password"])):
             raise HTTPException(status_code = 401, detail = "Invalid password")
         token = generate_jwt(user["id"])
-        return {"detail": "Successfully registered","token": token}
+        return {"detail": "User logged in","token": token}
     except HTTPException:
         raise
     except DatabaseError as e:
