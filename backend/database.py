@@ -5,6 +5,7 @@ import logging
 """
 REMINDER always typecast your data as asyncpg returns a record object
 and not a dictionary when using GET returns a [<record object>, <record object>]
+FastAPI cannot return a record object as it is not JSON seriable so convert it to a dict first
 """
 
 logger = logging.getLogger(__name__)
@@ -13,7 +14,7 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-
+#wrapper to catch database errors
 def catch_database_error(func):
     async def wrapper(*args, **kwargs):
         try:
