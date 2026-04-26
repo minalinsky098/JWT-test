@@ -43,7 +43,6 @@ async def select_user(email=None, user_id=None, conn = None):
         row = convert_fetchrow(await conn.fetchrow("SELECT * FROM users WHERE email = ($1)", email))
         return row
     elif user_id:
-        print(user_id)
         row = convert_fetchrow(await conn.fetchrow("SELECT * FROM users WHERE id = ($1)", user_id))
         return row    
 

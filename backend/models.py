@@ -61,3 +61,7 @@ login_responses = {
 get_all_users_responses = {
     **general_response
 }
+
+get_user_responses = {
+    **login_responses
+}
