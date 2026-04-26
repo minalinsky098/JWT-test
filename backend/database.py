@@ -1,5 +1,5 @@
 from exceptions import DatabaseError
-from utils import hash_password, check_password
+from utils import hash_password
 import logging
 
 """
@@ -38,13 +38,15 @@ async def select_all_users(conn):
     return rows
 
 @catch_database_error
-async def select_user(email=None, user_id=None, conn = None):
+async def select_user(conn, email=None, user_id=None):
     if email:
         row = convert_fetchrow(await conn.fetchrow("SELECT * FROM users WHERE email = ($1)", email))
         return row
     elif user_id:
         row = convert_fetchrow(await conn.fetchrow("SELECT * FROM users WHERE id = ($1)", user_id))
         return row    
+    else:
+        raise ValueError("Provide Email or Userid")
 
 @catch_database_error
 async def create_new_user(first_name, last_name, password, email, conn):
