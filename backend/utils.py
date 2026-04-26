@@ -21,7 +21,7 @@ async def check_password(password: str, hashed_password: str):
 def generate_jwt(user_id):
     current_time = datetime.now(timezone.utc)
     expiry_time = current_time + timedelta(minutes=5)
-    jwt_token = jwt.encode({"user_id": str(user_id), "exp": expiry_time}, SECRET, ALGORITHM)
+    jwt_token = jwt.encode({"user_id": str(user_id), "exp": expiry_time}, SECRET, algorithm=[ALGORITHM])
     return jwt_token
 
 def get_jwt_user_id(token):
