@@ -1,5 +1,7 @@
 from pydantic import BaseModel, field_validator
 from typing import List, Dict, Any
+from uuid import UUID
+from datetime import datetime
 
 #payloads
 
@@ -38,6 +40,13 @@ class LoginAuthenticateResponseModel(BaseModel): #200/201
 class GetAllUsersResponseModel(BaseModel):
     all_users: List[Dict[str, Any]]
 
+class GetUserResponseModel(BaseModel):
+    id: UUID
+    first_name: str
+    last_name: str
+    email: str
+    created_at: datetime
+
 #================================================
 #error_models  
 class GeneralErrorModel(BaseModel): #500
@@ -60,4 +69,8 @@ login_responses = {
 
 get_all_users_responses = {
     **general_response
+}
+
+get_user_responses = {
+    **login_responses
 }
