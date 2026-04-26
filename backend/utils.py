@@ -15,9 +15,8 @@ async def hash_password(password: str):
     hashed = await aiobcrypt.hashpw(byte_pass, await aiobcrypt.gensalt())
     return hashed.decode()
     
-async def check_password(password: str, hashed_password: str):
-    hashed = await aiobcrypt.checkpw(password.encode(), hashed_password.encode())
-    return hashed.decode()
+async def check_password(password: str, hashed_password: str): 
+    return await aiobcrypt.checkpw(password.encode(), hashed_password.encode())
 
 def generate_jwt(user_id):
     current_time = datetime.now(timezone.utc)

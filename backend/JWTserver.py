@@ -32,10 +32,9 @@ async def login_user(payload: LoginPayLoad, connection = Depends(get_db_conn)):
         user = await select_user(payload.email, connection)
         if not(user):
             raise HTTPException(status_code = 401, detail = "User is not registered")
-        row = await verfify_user(payload.email, payload.password, user["password"],connection)
-        if not (row):
+        if not (await verfify_user(payload.password, user["password"])):
             raise HTTPException(status_code = 401, detail = "Invalid password")
-        token = generate_jwt(row["id"])
+        token = generate_jwt(user["id"])
         return {"detail": "Successfully registered","token": token}
     except HTTPException:
         raise
