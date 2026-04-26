@@ -27,8 +27,15 @@ def main():
     return {"message":"This is the root"}
 
 @app.post("/api/v1/login", status_code = 200, response_model = LoginAuthenticateResponseModel, responses = login_responses)
-async def login_user(payload: LoginPayLoad):
-    pass
+async def login_user(payload: LoginPayLoad, connection = Depends(get_db_conn)):
+    try:
+        if not(await select_user(payload.email, connection)):
+            raise HTTPException(status_code = 401, detail = "User is not registered")
+    except HTTPException:
+        raise
+    except DatabaseError as e:
+        logger.error(str(e))
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 @app.post("/api/v1/register", status_code = 201, response_model = LoginAuthenticateResponseModel, responses = auth_responses)
 async def register_user(payload: RegisterPayLoad, connection = Depends(get_db_conn)):

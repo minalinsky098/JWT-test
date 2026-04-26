@@ -2,14 +2,24 @@ from pydantic import BaseModel, field_validator
 from typing import List, Dict, Any
 
 #payloads
-class LoginPayLoad(BaseModel):
-    pass
 
 class RegisterPayLoad(BaseModel):
     first_name: str
     last_name: str
     password: str
     email: str
+    
+    @field_validator("email")
+    @classmethod
+    def check_valid_email(cls, v):
+        cleaned_v = v.strip().lower()
+        if "@gmail.com" not in cleaned_v:
+            raise ValueError("Please enter a valid gmail address")
+        return cleaned_v
+    
+class LoginPayLoad(BaseModel):
+    email: str
+    password: str
     
     @field_validator("email")
     @classmethod
