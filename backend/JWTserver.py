@@ -6,7 +6,7 @@ import jwt
 
 from models import LoginPayLoad ,RegisterPayLoad\
 ,LoginAuthenticateResponseModel, GetAllUsersResponseModel\
-,auth_responses, login_responses, get_all_users_responses
+,auth_responses, login_responses, get_all_users_responses, get_user_responses
 from database import logger, select_all_users, create_new_user, select_user, check_password
 from exceptions import DatabaseError
 from utils import generate_jwt, check_password, get_jwt_user_id\
@@ -88,7 +88,11 @@ async def get_users(connection = Depends(get_db_conn)):
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal server error")
     
-@app.get("/api/v1/users", status_code=200)
+@app.get("/api/v1/users", status_code=200, responses= get_user_responses)
 async def get_user(user_id = Depends(get_user_id), connection=Depends(get_db_conn)):
-    user = await select_user(user_id=user_id, conn=connection)
-    return {"message": f"Hello {user["first_name"]} {user["last_name"]}", "user": user}
+    try:
+        user = await select_user(user_id=user_id, conn=connection)
+        return {"message": f"Hello {user["first_name"]} {user["last_name"]}", "user": user}
+    except DatabaseError as e: 
+        logger.error(str(e))
+        raise HTTPException(status_code=500, detail="Internal server error")
