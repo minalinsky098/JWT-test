@@ -43,11 +43,6 @@ async def select_user(email, conn):
     return row    
 
 @catch_database_error
-async def verfify_user(password, hashed_password):
-    row = await check_password(password, hashed_password)
-    return row    
-
-@catch_database_error
 async def create_new_user(first_name, last_name, password, email, conn):
     hashed_password = await hash_password(password)
     row = await conn.fetchrow(

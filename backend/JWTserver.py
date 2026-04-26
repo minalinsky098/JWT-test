@@ -7,7 +7,7 @@ from models import LoginPayLoad ,RegisterPayLoad\
 ,auth_responses, login_responses, get_all_users_responses
 from database import logger, select_all_users, create_new_user, select_user, verfify_user
 from exceptions import DatabaseError
-from utils import generate_jwt\
+from utils import generate_jwt, check_password\
 ,DATABASEURL
 
 @asynccontextmanager
@@ -32,7 +32,7 @@ async def login_user(payload: LoginPayLoad, connection = Depends(get_db_conn)):
         user = await select_user(payload.email, connection)
         if not(user):
             raise HTTPException(status_code = 401, detail = "User is not registered")
-        if not (await verfify_user(payload.password, user["password"])):
+        if not (await check_password(payload.password, user["password"])):
             raise HTTPException(status_code = 401, detail = "Invalid password")
         token = generate_jwt(user["id"])
         return {"detail": "Successfully registered","token": token}
