@@ -1,5 +1,5 @@
 from exceptions import DatabaseError
-from utils import hash_password
+from utils import hash_password, check_password
 import logging
 
 """
@@ -44,7 +44,7 @@ async def select_user(email, conn):
 
 @catch_database_error
 async def verfify_user(email, password, hashed_password, conn):
-    password = await hash_password(password)
+    
     row = convert_fetchrow(await conn.fetchrow("SELECT * FROM users WHERE email = ($1) AND password = ($2)", email, password))
     return row    
 
