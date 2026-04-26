@@ -41,6 +41,9 @@ async def login_user(payload: LoginPayLoad, connection = Depends(get_db_conn)):
     except DatabaseError as e:
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal Server Error")
+    except Exception as e:
+        logger.error(str(e))
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 @app.post("/api/v1/register", status_code = 201, response_model = LoginAuthenticateResponseModel, responses = auth_responses)
 async def register_user(payload: RegisterPayLoad, connection = Depends(get_db_conn)):
@@ -53,6 +56,9 @@ async def register_user(payload: RegisterPayLoad, connection = Depends(get_db_co
     except HTTPException:
         raise
     except DatabaseError as e:
+        logger.error(str(e))
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+    except Exception as e:
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
