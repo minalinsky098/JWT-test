@@ -5,9 +5,9 @@ import asyncpg
 from models import LoginPayLoad ,RegisterPayLoad\
 ,LoginAuthenticateResponseModel, GetAllUsersResponseModel\
 ,auth_responses, login_responses, get_all_users_responses
-from database import logger, select_all_users, create_new_user, select_user
+from database import logger, select_all_users, create_new_user, select_user, verfify_user
 from exceptions import DatabaseError
-from utils import generate_jwt\
+from utils import generate_jwt, check_password\
 ,DATABASEURL
 
 @asynccontextmanager
@@ -27,8 +27,23 @@ def main():
     return {"message":"This is the root"}
 
 @app.post("/api/v1/login", status_code = 200, response_model = LoginAuthenticateResponseModel, responses = login_responses)
-async def login_user(payload: LoginPayLoad):
-    pass
+async def login_user(payload: LoginPayLoad, connection = Depends(get_db_conn)):
+    try:
+        user = await select_user(payload.email, connection)
+        if not(user):
+            raise HTTPException(status_code = 401, detail = "User is not registered")
+        if not (await check_password(payload.password, user["hashed_password"])):
+            raise HTTPException(status_code = 401, detail = "Invalid password")
+        token = generate_jwt(user["id"])
+        return {"detail": "User logged in","token": token}
+    except HTTPException:
+        raise
+    except DatabaseError as e:
+        logger.error(str(e))
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+    except Exception as e:
+        logger.error(str(e))
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 @app.post("/api/v1/register", status_code = 201, response_model = LoginAuthenticateResponseModel, responses = auth_responses)
 async def register_user(payload: RegisterPayLoad, connection = Depends(get_db_conn)):
@@ -41,6 +56,9 @@ async def register_user(payload: RegisterPayLoad, connection = Depends(get_db_co
     except HTTPException:
         raise
     except DatabaseError as e:
+        logger.error(str(e))
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+    except Exception as e:
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal Server Error")
 

@@ -1,5 +1,5 @@
 from exceptions import DatabaseError
-from utils import hash_password
+from utils import hash_password, check_password
 import logging
 
 """
