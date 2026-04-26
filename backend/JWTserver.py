@@ -5,7 +5,7 @@ import asyncpg
 from models import LoginPayLoad ,RegisterPayLoad\
 ,LoginAuthenticateResponseModel, GetAllUsersResponseModel\
 ,auth_responses, login_responses, get_all_users_responses
-from database import logger, select_all_users, create_new_user, select_user
+from database import logger, select_all_users, create_new_user, select_user, verfify_user
 from exceptions import DatabaseError
 from utils import generate_jwt\
 ,DATABASEURL
@@ -29,10 +29,11 @@ def main():
 @app.post("/api/v1/login", status_code = 200, response_model = LoginAuthenticateResponseModel, responses = login_responses)
 async def login_user(payload: LoginPayLoad, connection = Depends(get_db_conn)):
     try:
-        row = await select_user(payload.email, connection)
-        if not(row):
+        if not(await select_user(payload.email, connection)):
             raise HTTPException(status_code = 401, detail = "User is not registered")
-        
+        row = verfify_user(payload.email, payload.password, connection)
+        if not (row):
+            raise HTTPException(status_code = 401, detail = "Invalid password")
         token = generate_jwt(row["id"])
         return {"detail": "Successfully registered","token": token}
     except HTTPException:
