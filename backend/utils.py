@@ -25,7 +25,7 @@ def generate_jwt(user_id):
     jwt_token = jwt.encode({"user_id": str(user_id), "exp": expiry_time}, SECRET, ALGORITHM)
     return jwt_token
 
-def get_user_id(token):
+def get_jwt_user_id(token):
     decoded = jwt.decode(token, SECRET, ALGORITHM)
     return decoded["user_id"]
     

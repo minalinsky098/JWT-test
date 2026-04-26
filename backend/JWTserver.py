@@ -7,7 +7,7 @@ from models import LoginPayLoad ,RegisterPayLoad\
 ,auth_responses, login_responses, get_all_users_responses
 from database import logger, select_all_users, create_new_user, select_user, verfify_user
 from exceptions import DatabaseError
-from utils import generate_jwt, check_password\
+from utils import generate_jwt, check_password, get_jwt_user_id\
 ,DATABASEURL
 
 @asynccontextmanager
