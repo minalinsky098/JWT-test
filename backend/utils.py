@@ -1,7 +1,6 @@
 import aiobcrypt
 from dotenv import load_dotenv
 from datetime import datetime, timezone, timedelta
-from exceptions import ExpiredTokenError
 import os
 import jwt
 import asyncio
