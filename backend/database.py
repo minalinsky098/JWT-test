@@ -43,6 +43,11 @@ async def select_user(email, conn):
     return row    
 
 @catch_database_error
+async def verfify_user(email, password, conn):
+    row = convert_fetchrow(await conn.fetchrow("SELECT * FROM users WHERE email = ($1) AND password = ($2)", email, password))
+    return row    
+
+@catch_database_error
 async def create_new_user(first_name, last_name, password, email, conn):
     hashed_password = await hash_password(password)
     row = await conn.fetchrow(
