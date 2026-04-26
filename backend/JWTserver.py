@@ -29,7 +29,8 @@ def main():
 @app.post("/api/v1/login", status_code = 200, response_model = LoginAuthenticateResponseModel, responses = login_responses)
 async def login_user(payload: LoginPayLoad, connection = Depends(get_db_conn)):
     try:
-        if not(await select_user(payload.email, connection)):
+        user = await select_user(payload.email, connection)
+        if not(user):
             raise HTTPException(status_code = 401, detail = "User is not registered")
         row = await verfify_user(payload.email, payload.password, connection)
         if not (row):
