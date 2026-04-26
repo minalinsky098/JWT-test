@@ -1,6 +1,7 @@
 import aiobcrypt
 from dotenv import load_dotenv
 from datetime import datetime, timezone, timedelta
+from exceptions import ExpiredTokenError
 import os
 import jwt
 import asyncio
@@ -25,8 +26,12 @@ def generate_jwt(user_id):
     return jwt_token
 
 def get_user_id(token):
-    user = jwt.decode(token)
-    
-    return user["user_id"]
+    try:
+        decoded = jwt.decode(token, SECRET, ALGORITHM)
+        return decoded["user_id"]
+    except jwt.ExpiredSignatureError:
+        raise
+    except jwt.InvalidTokenError:
+        raise
     
 #asyncio.run(hash_password("THIS PASSWORD"))
