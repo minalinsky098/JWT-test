@@ -1,82 +1,110 @@
 /* * {
     border: 1px solid black;
 } */
-body{
-    background: #F9F7F3;
+
+body {
+    background: #EFECe4;
 }
 
-main{
+main {
     font-family: 'Quicksand', sans-serif;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 1px solid red;
+    /* border: 1px solid red; */
     text-align: center;
     min-height: 50vh;
 }
 
-input{
-    padding: 1rem;
-    border: 1px solid red;
+input {
+    padding: 0.6rem 1rem;
+    border: 1px solid #ccc;   /* was red */
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Quicksand', sans-serif;
+    background: #f9f9f4;
+    outline: none;
 }
 
-label{
-    border: 1px solid red;
+input:focus {
+    border-color: #999;
 }
 
-main h1{
+label {
+    /* border: 1px solid red; */
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+main h1 {
     font-family: 'Pacifico', cursive;
     font-size: 2rem;
-    border: 1px solid red;
+    /* border: 1px solid red; */
+    margin-bottom: 1.5rem;
 }
 
-.login-group{
-    padding: 2rem;
-    font-size: 2rem;
+.login-group {
+    padding: 0.5rem 0;        /* was 2rem — too much vertical gap */
+    font-size: 1rem;          /* was 2rem — made labels huge */
     align-items: left;
     text-align: left;
     display: flex;
     flex-direction: column;
+    gap: 6px;
 }
 
-.loginForm{
-  background: #eeeee4;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
-  border: 5px solid #cccccc;
-  border-radius: 12px; /* rounded corners */
-  padding: 2rem;
-  min-height: 50vh;
-  min-width: 50vh;
-  display: flex;
-  flex-direction: column;
+.loginForm {
+    background: #eeeee4;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid #ddd;   /* was 5px solid #cccccc — too heavy */
+    border-radius: 12px;
+    padding: 2rem;
+    min-height: 0;            /* was 50vh — forced unnecessary height */
+    min-width: 360px;
+    display: flex;
+    flex-direction: column;
 }
 
-header{
+button {
+    margin-top: 1.5rem;
+    padding: 0.7rem;
+    width: 100%;
+    background: #5a5a4a;
+    color: #f9f7f3;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+}
+
+button:hover {
+    background: #3e3e30;
+}
+
+header {
     background: transparent;
     justify-content: center;
     display: flex;
     align-items: center;
-    border: 1px solid red;
+    /* border: 1px solid red; */
+    padding: 1rem 2rem;
 }
-.leftlogo{
-    text-align: left;
-    flex: 1;
+
+.leftlogo  { text-align: left;  flex: 1; }
+.title     { flex: 1; text-align: center; }
+.rightlogo { flex: 1; text-align: right; }
+
+header img {
+    width: 8rem;      /* was 12rem — a bit large */
+    height: 8rem;
 }
-.title{
-    flex: 1;
-    text-align: center;
-}
-.rightlogo{
-    flex: 1;
-    align-items: right;
-    text-align: right;
-}
-header img{
-    width: 12rem;
-    height: 12rem
-}
-header h1{
+
+header h1 {
     font-family: 'Pacifico', cursive;
     font-size: 4rem;
 }
