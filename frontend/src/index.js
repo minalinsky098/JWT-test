@@ -27,7 +27,7 @@ function main(){
     console.log("Hello world");
 }
 
-async function switchRegister(event){
+function switchRegister(event){
     const {formtitle, firstNameGroup, lastNameGroup, submitButton, registerButton} = elements;
     console.log("switch", register);
     if (register){
