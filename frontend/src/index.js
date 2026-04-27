@@ -2,6 +2,8 @@ const BASE_URL = "http://127.0.0.1:8000";
 const elements = {
     formtitle: null,
     form: null,
+    firstNameInput: null, 
+    lastNameInput: null, 
     emailInput: null,
     passwordInput: null,
     firstNameGroup: null,
@@ -15,6 +17,8 @@ let register = false;
 function main(){
     elements.formtitle = document.querySelector("#title");
     elements.form = document.querySelector("form");
+    elements.firstNameInput = document.querySelector("#firstname")
+    elements.lastNameInput = document.querySelector("#lastname")
     elements.emailInput = document.querySelector("#email");
     elements.passwordInput = document.querySelector("#password");
     elements.registerButton = document.querySelector("#register");
@@ -47,11 +51,41 @@ function switchRegister(event){
 
 async function onSubmit(event){
     event.preventDefault();
-    const {emailInput, passwordInput} = elements
-    console.log(email.value, password.value);
-    res = await fetch(BASE_URL);
-    res = await res.json();
-    console.log(res);
+    let res = null;
+    if (register){
+        const {firstNameInput, lastNameInput, emailInput, passwordInput} = elements;
+        const url = `${BASE_URL}/api/v1/register`;
+        res = await fetch(url, {
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json"
+            }, 
+            body: JSON.stringify(
+                {first_name: firstNameInput.value,
+                last_name: lastNameInput.value,
+                password: passwordInput.value, 
+                email: emailInput.value})
+        });
+        res = await res.json();
+        console.log(res);
+    }
+    else{
+        const {emailInput, passwordInput} = elements; 
+        const url = `${BASE_URL}/api/v1/login`;
+        res = await fetch(url,
+            {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({email: emailInput.value, password: passwordInput.value})
+            });
+        if (!res.ok){
+            window.alert("SOMETHING WENT WRONG");
+        }
+        res = await res.json();
+        console.log(res);
+    }
 }
 
 main()
