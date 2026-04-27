@@ -2,6 +2,8 @@ const BASE_URL = "http://127.0.0.1:8000";
 const elements = {
     formtitle: null,
     form: null,
+    firstnameInput: null, 
+    lastnameInput: null, 
     emailInput: null,
     passwordInput: null,
     firstNameGroup: null,
@@ -15,6 +17,8 @@ let register = false;
 function main(){
     elements.formtitle = document.querySelector("#title");
     elements.form = document.querySelector("form");
+    elements.firstnameInput = document.querySelector("#firstname")
+    elements.lastnameInput = document.querySelector("#lastname")
     elements.emailInput = document.querySelector("#email");
     elements.passwordInput = document.querySelector("#password");
     elements.registerButton = document.querySelector("#register");
@@ -47,11 +51,16 @@ function switchRegister(event){
 
 async function onSubmit(event){
     event.preventDefault();
-    const {emailInput, passwordInput} = elements
-    console.log(email.value, password.value);
-    res = await fetch(BASE_URL);
-    res = await res.json();
-    console.log(res);
+    if (register){
+        const {emailInput, passwordInput} = elements
+
+    }
+    else{
+        const {emailInput, passwordInput} = elements
+        res = await fetch(BASE_URL);
+        res = await res.json();
+        console.log(res);
+    }
 }
 
 main()
