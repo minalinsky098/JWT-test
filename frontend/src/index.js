@@ -1,5 +1,6 @@
 const BASE_URL = "http://127.0.0.1:8000";
 const elements = {
+    formtitle: null,
     form: null,
     emailInput: null,
     passwordInput: null,
@@ -12,6 +13,7 @@ const elements = {
 let register = true;
 
 function main(){
+    elements.formtitle = document.querySelector("#title");
     elements.form = document.querySelector("form");
     elements.emailInput = document.querySelector("#email");
     elements.passwordInput = document.querySelector("#password");
@@ -26,15 +28,17 @@ function main(){
 }
 
 async function switchRegister(event){
-    const {firstNameGroup, lastNameGroup, submitButton, registerButton} = elements;
+    const {formtitle, firstNameGroup, lastNameGroup, submitButton, registerButton} = elements;
     console.log("switch", register);
     if (register){
+        formtitle.textContent = "Register";
         firstNameGroup.style.display = "flex";
         lastNameGroup.style.display = "flex";
         submitButton.textContent = "Register";
         registerButton.textContent = "Have an account?"
     }
     else{
+        formtitle.textContent = "Login";
         firstNameGroup.style.display = "none";
         lastNameGroup.style.display = "none";
         submitButton.textContent = "Login";
