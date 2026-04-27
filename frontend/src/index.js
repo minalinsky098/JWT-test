@@ -24,7 +24,6 @@ function main(){
 
     elements.form.addEventListener("submit", onSubmit);
     elements.registerButton.addEventListener("click", switchRegister);
-    console.log("Hello world");
 }
 
 function switchRegister(event){
