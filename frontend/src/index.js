@@ -10,7 +10,7 @@ const elements = {
     submitButton: null
 }
 
-let register = true;
+let register = false;
 
 function main(){
     elements.formtitle = document.querySelector("#title");
@@ -29,7 +29,7 @@ function main(){
 
 function switchRegister(event){
     const {formtitle, firstNameGroup, lastNameGroup, submitButton, registerButton} = elements;
-    console.log("switch", register);
+    register = !register;
     if (register){
         formtitle.textContent = "Register";
         firstNameGroup.style.display = "flex";
@@ -44,7 +44,6 @@ function switchRegister(event){
         submitButton.textContent = "Login";
         registerButton.textContent = "Don't have an account?"
     }
-    register = !register;
 }
 
 async function onSubmit(event){
