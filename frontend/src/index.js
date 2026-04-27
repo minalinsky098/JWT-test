@@ -66,8 +66,13 @@ async function onSubmit(event){
                 password: passwordInput.value, 
                 email: emailInput.value})
         });
-        res = await res.json();
-        console.log(res);
+        if (!res.ok){
+            window.alert("SOMETHING WENT WRONG");
+        }
+        else{
+            res = await res.json();
+            localStorage.setItem("token", res.token)
+        }
     }
     else{
         const {emailInput, passwordInput} = elements; 
@@ -83,9 +88,12 @@ async function onSubmit(event){
         if (!res.ok){
             window.alert("SOMETHING WENT WRONG");
         }
-        res = await res.json();
-        console.log(res);
+        else{
+            res = await res.json();
+            localStorage.setItem("token", res.token)
+        }
     }
+    console.log(res);
 }
 
 main()
