@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from contextlib import asynccontextmanager
+from fastapi.middleware.cors import CORSMiddleware
 import asyncpg
 import jwt
 
@@ -38,6 +39,15 @@ async def get_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTP
         raise HTTPException(status_code=500, detail="Internal Server Error") 
         
 app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:5500"],  # dev only; see below
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/")
 def main():
