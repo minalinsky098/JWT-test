@@ -6,6 +6,29 @@ body {
     background: #EFECe4;
 }
 
+#firstName-group{
+    display: none;
+}
+
+#lastName-group{
+    display: none;
+}
+
+#register {
+    background: none;
+    border: none;
+    text-decoration: underline;
+    cursor: pointer;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.85rem;
+    color: #5a5a4a;
+    margin-top: 0.5rem;
+}
+
+#register:hover {
+    color: #3e3e30;
+}
+
 main {
     font-family: 'Quicksand', sans-serif;
     display: flex;
