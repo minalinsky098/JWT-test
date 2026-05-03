@@ -42,10 +42,10 @@ async def select_all_users(conn):
 @catch_database_error
 async def select_user(conn, email=None, user_id=None):
     if email:
-        row = convert_fetchrow(await conn.fetchrow("SELECT * FROM users WHERE email = ($1)", email))
+        row = convert_fetchrow(await conn.fetchrow("SELECT id, hashed_password FROM users WHERE email = ($1)", email))
         return row
     elif user_id:
-        row = convert_fetchrow(await conn.fetchrow("SELECT * FROM users WHERE id = ($1)", user_id))
+        row = convert_fetchrow(await conn.fetchrow("SELECT id, first_name, last_name, email, created_at FROM users WHERE id = ($1)", user_id))
         return row    
     else:
         raise ValueError("Provide Email or Userid")
