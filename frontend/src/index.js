@@ -66,14 +66,6 @@ async function onSubmit(event){
                 password: passwordInput.value, 
                 email: emailInput.value})
         });
-        if (!res.ok){
-            window.alert("SOMETHING WENT WRONG");
-        }
-        else{
-            res = await res.json();
-            localStorage.setItem("token", res.token)
-            window.location.href = "/home"
-        }
     }
     else{
         const {emailInput, passwordInput} = elements; 
@@ -86,7 +78,8 @@ async function onSubmit(event){
             },
             body: JSON.stringify({email: emailInput.value, password: passwordInput.value})
             });
-        if (!res.ok){
+    }
+    if (!res.ok){
             window.alert("SOMETHING WENT WRONG");
         }
         else{
@@ -94,8 +87,8 @@ async function onSubmit(event){
             localStorage.setItem("token", res.token)
             window.location.href = "/home"
         }
-    }
     console.log(res);
+
 }
 
 main()
