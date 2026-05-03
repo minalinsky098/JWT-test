@@ -1,7 +1,10 @@
 from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from contextlib import asynccontextmanager
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from contextlib import asynccontextmanager
+from pathlib import Path
 import asyncpg
 import jwt
 
@@ -39,6 +42,7 @@ async def get_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTP
         raise HTTPException(status_code=500, detail="Internal Server Error") 
         
 app = FastAPI(lifespan=lifespan)
+frontend_path = Path(__file__).resolve().parent.parent/"frontend"
 
 app.add_middleware(
     CORSMiddleware,
@@ -48,10 +52,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.mount("/frontend", StaticFiles(directory=frontend_path), name="login")
 
 @app.get("/")
 def main():
-    return {"message":"This is the root"}
+    return FileResponse(frontend_path/"pages"/"index.html")
 
 @app.post("/api/v1/login", status_code = 200, response_model = LoginAuthenticateResponseModel, responses = login_responses)
 async def login_user(payload: LoginPayLoad, connection = Depends(get_db_conn)):
