@@ -23,7 +23,8 @@ async def lifespan(app: FastAPI):
 async def get_db_conn(request: Request):
     async with request.app.state.db_pool.acquire() as conn:
         yield conn
-        
+  
+#dependency to get the user id given the frontend sends a bearer witht the token      
 async def get_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False))):
     try:
         if not authorization:
