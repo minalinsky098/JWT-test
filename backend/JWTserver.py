@@ -58,6 +58,10 @@ app.mount("/frontend", StaticFiles(directory=frontend_path), name="login")
 def main():
     return FileResponse(frontend_path/"pages"/"index.html")
 
+@app.get("/home")
+def homepage():
+    return FileResponse(frontend_path/"pages"/"homepage.html")
+
 @app.post("/api/v1/login", status_code = 200, response_model = LoginAuthenticateResponseModel, responses = login_responses)
 async def login_user(payload: LoginPayLoad, connection = Depends(get_db_conn)):
     try:

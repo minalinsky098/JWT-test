@@ -72,6 +72,7 @@ async function onSubmit(event){
         else{
             res = await res.json();
             localStorage.setItem("token", res.token)
+            window.location.href = "/home"
         }
     }
     else{
@@ -91,6 +92,7 @@ async function onSubmit(event){
         else{
             res = await res.json();
             localStorage.setItem("token", res.token)
+            window.location.href = "/home"
         }
     }
     console.log(res);
