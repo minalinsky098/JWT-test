@@ -1,5 +1,6 @@
 from exceptions import DatabaseError
 from utils import hash_password
+from functools import wraps
 import logging
 
 """
@@ -16,6 +17,7 @@ logging.basicConfig(
 
 #wrapper to catch database errors
 def catch_database_error(func):
+    @wraps(func)
     async def wrapper(*args, **kwargs):
         try:
             return await func(*args, **kwargs)
