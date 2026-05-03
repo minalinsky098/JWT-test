@@ -1,7 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.staticfiles import StaticFiles
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -43,14 +42,6 @@ async def get_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTP
         
 app = FastAPI(lifespan=lifespan)
 frontend_path = Path(__file__).resolve().parent.parent/"frontend"
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5500"],  # dev only; see below
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 app.mount("/frontend", StaticFiles(directory=frontend_path), name="login")
 
