@@ -25,7 +25,7 @@ def generate_jwt(user_id):
     return jwt_token
 
 def get_jwt_user_id(token):
-    decoded = jwt.decode(token, SECRET, ALGORITHM)
+    decoded = jwt.decode(bytes=token, secret= SECRET, algorithms=[ALGORITHM])
     return decoded["user_id"]
     
 #asyncio.run(hash_password("THIS PASSWORD"))
