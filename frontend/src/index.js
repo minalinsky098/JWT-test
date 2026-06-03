@@ -79,8 +79,9 @@ async function onSubmit(event){
             body: JSON.stringify({email: emailInput.value, password: passwordInput.value})
             });
     }
+    res = await res.json();
     if (!res.ok){
-            window.alert("SOMETHING WENT WRONG");
+            window.alert(res.detail);
         }
         else{
             res = await res.json();

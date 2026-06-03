@@ -1,5 +1,5 @@
 from exceptions import DatabaseError
-from utils import hash_password
+from backend.auth import hash_password
 from functools import wraps
 import logging
 

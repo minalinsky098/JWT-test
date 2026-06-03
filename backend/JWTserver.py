@@ -12,7 +12,7 @@ from models import LoginPayLoad ,RegisterPayLoad\
 ,auth_responses, login_responses, get_all_users_responses, get_user_responses
 from database import logger, select_all_users, create_new_user, select_user
 from exceptions import DatabaseError
-from utils import generate_jwt, check_password, get_jwt_user_id\
+from auth import generate_jwt, check_password, decode_jwt_user_id\
 ,DATABASEURL
 
 @asynccontextmanager
@@ -29,7 +29,7 @@ async def get_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTP
     try:
         if not authorization:
             raise HTTPException(status_code=401, detail="No credentials provided")
-        user_id = get_jwt_user_id(authorization.credentials)
+        user_id = decode_jwt_user_id(authorization.credentials)
         return user_id
     except HTTPException:
         raise
@@ -44,7 +44,7 @@ async def get_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTP
 app = FastAPI(lifespan=lifespan)
 frontend_path = Path(__file__).resolve().parent.parent/"frontend"
 
-app.mount("/frontend", StaticFiles(directory=frontend_path), name="login")
+app.mount("/frontend", StaticFiles(directory=frontend_path), name="static")
 
 @app.get("/")
 def main():

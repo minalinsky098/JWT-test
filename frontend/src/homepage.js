@@ -1,8 +1,7 @@
 const BASE_URL = "http://127.0.0.1:8000";
 async function main(){ 
-    await checkexpiry()
-    setInterval(await checkexpiry, 60000);
-
+    await checkexpiry();
+    setInterval(checkexpiry, 60000);
 }
 function getTokenPayload(token){
     const payload = token.split(".")[1];
@@ -10,9 +9,10 @@ function getTokenPayload(token){
 }
 async function checkexpiry(){
     const token = localStorage.getItem("token");
+    if (!token) { window.location.href = "/"; return; }
     const payload = getTokenPayload(token);
     const isExpired = payload.exp * 1000 < Date.now();
-    console.log("check for expiry")
+    console.log("check for")
     if (isExpired){
         window.location.href = "/";
         return;
