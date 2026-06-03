@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from datetime import datetime, timezone, timedelta
 import os
 import jwt
+import asyncio
 
 load_dotenv()
 DATABASEURL = os.getenv("DATABASE_URL")
@@ -27,3 +28,4 @@ def decode_jwt_user_id(token):
     decoded = jwt.decode(jwt = token, key = SECRET, algorithms=[ALGORITHM])
     return decoded["user_id"]
     
+#asyncio.run(hash_password("THIS PASSWORD"))
