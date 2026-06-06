@@ -1,0 +1,20 @@
+.toast{
+    position : fixed;
+    bottom : 1.5rem;
+    right: 1.5rem;
+    z-index: 10;
+    width: 20rem;
+    padding: 1px;
+    background: #f9f9f9;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #080202;
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 3s ease;
+}
+
+.toast.show{
+    opacity: 1;
+}
+
