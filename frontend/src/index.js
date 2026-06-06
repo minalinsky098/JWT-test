@@ -108,11 +108,9 @@ async function onSubmit(event){
         showToast("error", toastTitle, toastMessage);
     }
     else{
-        showToast("success", "Login Successful!");
         localStorage.setItem("token", data.token)
         window.location.href = "/home"
     }
-    console.log(res);
 
 }
 
