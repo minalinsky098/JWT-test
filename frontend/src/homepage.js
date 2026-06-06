@@ -3,7 +3,7 @@ const BASE_URL = "http://127.0.0.1:8000";
 async function main(){ 
     await checkexpiry();
     createToast();
-    showToast("success");
+    showToast("success",200);
     setInterval(checkexpiry, 60000)
 }
 function getTokenPayload(token){

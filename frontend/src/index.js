@@ -82,7 +82,7 @@ async function onSubmit(event){
             });
     }
     if (!res.ok){
-        showToast("error");
+        showToast("error", res.status);
     }
     else{
         res = await res.json();
