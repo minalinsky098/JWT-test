@@ -30,7 +30,7 @@ async def get_db_conn(request: Request):
 #dependency to get the user id given the frontend sends a bearer witht the token      
 async def get_current_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False))):
     if DEV_MODE:
-        return {"id": 1, "username": "dev_user", "role": "admin"}
+        return {"user_id": "1", "username": "dev_user", "role": "admin"}
     try:
         if not authorization:
             raise HTTPException(status_code=401, detail="No credentials provided")
