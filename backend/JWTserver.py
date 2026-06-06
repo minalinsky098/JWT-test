@@ -25,7 +25,7 @@ async def get_db_conn(request: Request):
         yield conn
   
 #dependency to get the user id given the frontend sends a bearer witht the token      
-async def get_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False))):
+async def get_current_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False))):
     try:
         if not authorization:
             raise HTTPException(status_code=401, detail="No credentials provided")
@@ -90,7 +90,7 @@ async def register_user(payload: RegisterPayLoad, connection = Depends(get_db_co
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
-@app.get("/api/v1/users/all", status_code = 200, response_model=GetAllUsersResponseModel, responses = get_all_users_responses)
+@app.get("/api/v1/users", status_code = 200, response_model=GetAllUsersResponseModel, responses = get_all_users_responses)
 async def get_users(connection = Depends(get_db_conn)):
     try:
         users = await select_all_users(connection)
@@ -99,8 +99,8 @@ async def get_users(connection = Depends(get_db_conn)):
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal server error")
     
-@app.get("/api/v1/users", status_code=200, response_model=GetUserResponseModel, responses= get_user_responses)
-async def get_user(user_id = Depends(get_user_id), connection=Depends(get_db_conn)):
+@app.get("/api/v1/users/me", status_code=200, response_model=GetUserResponseModel, responses= get_user_responses)
+async def get_user(user_id = Depends(get_current_user_id), connection=Depends(get_db_conn)):
     try:
         user = await select_user(user_id=user_id, conn=connection)
         if not user:
