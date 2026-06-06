@@ -14,7 +14,8 @@ async function main(){
 }
 function getTokenPayload(token){
     const payload = token.split(".")[1];
-    return JSON.parse(atob(payload));
+    const payloadB64 = payload.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(payload.length / 4) * 4, "=");
+    return JSON.parse(atob(payloadB64));
 }
 async function getUserInfo(){
     if (DEV_MODE) {
