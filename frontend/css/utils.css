@@ -1,0 +1,27 @@
+.toast{
+    display: block;
+    position : fixed;
+    bottom : 1.5rem;
+    right: 1.5rem;
+    z-index: 10;
+    width: 20rem;
+    padding: 1px;
+    background: #eeeee4;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #080202;
+    border-radius: 12px;
+    opacity: 0;
+    transition: opacity 2s ease;
+}
+.toast h1{
+    font-family: 'Pacifico', cursive;
+    text-align: center;
+}
+.toast p{
+    font-family: 'Quicksand', sans-serif;
+}
+.toast.show{
+    opacity: 1;
+}
+

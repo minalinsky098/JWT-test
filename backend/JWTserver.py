@@ -1,17 +1,22 @@
 from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from contextlib import asynccontextmanager
-from fastapi.middleware.cors import CORSMiddleware
+from pathlib import Path
 import asyncpg
 import jwt
+import os
 
 from models import LoginPayLoad ,RegisterPayLoad\
 ,LoginAuthenticateResponseModel, GetAllUsersResponseModel, GetUserResponseModel\
 ,auth_responses, login_responses, get_all_users_responses, get_user_responses
 from database import logger, select_all_users, create_new_user, select_user
 from exceptions import DatabaseError
-from utils import generate_jwt, check_password, get_jwt_user_id\
+from auth import generate_jwt, check_password, decode_jwt_user_id\
 ,DATABASEURL
+
+DEV_MODE = os.getenv("DEV_MODE", "false").lower() == "true"
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -21,12 +26,15 @@ async def lifespan(app: FastAPI):
 async def get_db_conn(request: Request):
     async with request.app.state.db_pool.acquire() as conn:
         yield conn
-        
-async def get_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False))):
+  
+#dependency to get the user id given the frontend sends a bearer witht the token      
+async def get_current_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False))):
+    if DEV_MODE:
+        return {"id": 1, "username": "dev_user", "role": "admin"}
     try:
         if not authorization:
             raise HTTPException(status_code=401, detail="No credentials provided")
-        user_id = get_jwt_user_id(authorization.credentials)
+        user_id = decode_jwt_user_id(authorization.credentials)
         return user_id
     except HTTPException:
         raise
@@ -39,19 +47,20 @@ async def get_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTP
         raise HTTPException(status_code=500, detail="Internal Server Error") 
         
 app = FastAPI(lifespan=lifespan)
+frontend_path = Path(__file__).resolve().parent.parent/"frontend"
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5500"],  # dev only; see below
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
+app.mount("/frontend", StaticFiles(directory=frontend_path), name="static")
 
 @app.get("/")
 def main():
-    return {"message":"This is the root"}
+    if DEV_MODE:
+        print("DEVMODe")
+        return FileResponse(frontend_path/"pages"/"homepage.html")
+    return FileResponse(frontend_path/"pages"/"index.html")
+
+@app.get("/home")
+def homepage():
+    return FileResponse(frontend_path/"pages"/"homepage.html")
 
 @app.post("/api/v1/login", status_code = 200, response_model = LoginAuthenticateResponseModel, responses = login_responses)
 async def login_user(payload: LoginPayLoad, connection = Depends(get_db_conn)):
@@ -89,7 +98,7 @@ async def register_user(payload: RegisterPayLoad, connection = Depends(get_db_co
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
-@app.get("/api/v1/users/all", status_code = 200, response_model=GetAllUsersResponseModel, responses = get_all_users_responses)
+@app.get("/api/v1/users", status_code = 200, response_model=GetAllUsersResponseModel, responses = get_all_users_responses)
 async def get_users(connection = Depends(get_db_conn)):
     try:
         users = await select_all_users(connection)
@@ -98,8 +107,8 @@ async def get_users(connection = Depends(get_db_conn)):
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal server error")
     
-@app.get("/api/v1/users", status_code=200, response_model=GetUserResponseModel, responses= get_user_responses)
-async def get_user(user_id = Depends(get_user_id), connection=Depends(get_db_conn)):
+@app.get("/api/v1/users/me", status_code=200, response_model=GetUserResponseModel, responses= get_user_responses)
+async def get_user(user_id = Depends(get_current_user_id), connection=Depends(get_db_conn)):
     try:
         user = await select_user(user_id=user_id, conn=connection)
         if not user:

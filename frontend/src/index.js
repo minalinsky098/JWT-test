@@ -1,3 +1,4 @@
+import { showToast, createToast } from "./utils.js";
 const BASE_URL = "http://127.0.0.1:8000";
 const elements = {
     formtitle: null,
@@ -28,6 +29,7 @@ function main(){
 
     elements.form.addEventListener("submit", onSubmit);
     elements.registerButton.addEventListener("click", switchRegister);
+    createToast();
 }
 
 function switchRegister(event){
@@ -51,6 +53,9 @@ function switchRegister(event){
 
 async function onSubmit(event){
     event.preventDefault();
+    let toastTitle = null;
+    let toastMessage = null;
+    let data = null;
     let res = null;
     if (register){
         const {firstNameInput, lastNameInput, emailInput, passwordInput} = elements;
@@ -66,13 +71,7 @@ async function onSubmit(event){
                 password: passwordInput.value, 
                 email: emailInput.value})
         });
-        if (!res.ok){
-            window.alert("SOMETHING WENT WRONG");
-        }
-        else{
-            res = await res.json();
-            localStorage.setItem("token", res.token)
-        }
+        localStorage.setItem("user", "register");
     }
     else{
         const {emailInput, passwordInput} = elements; 
@@ -85,15 +84,36 @@ async function onSubmit(event){
             },
             body: JSON.stringify({email: emailInput.value, password: passwordInput.value})
             });
-        if (!res.ok){
-            window.alert("SOMETHING WENT WRONG");
+        localStorage.setItem("user", "login");
+    }
+    data = await res.json();
+    if (!res.ok){
+        toastTitle = "Login Unsuccesful!!";
+        switch (res.status){
+            case 401:
+                if (data.detail.includes("password")){
+                    toastMessage = "Invalid password, enter the correct password";
+                }
+                else if((data.detail.includes("registered"))){
+                    toastMessage = "This user is not registered, use the register button to register an account";
+                }
+                break;
+            case 409:
+                toastMessage = "This user is already registered, Please use the login button to login.";
+                break;
+            case 500:
+                toastMessage = "Server Error, Please Try Again.";
+                break;
         }
-        else{
-            res = await res.json();
-            localStorage.setItem("token", res.token)
-        }
+        showToast("error", toastTitle, toastMessage);
+    }
+    else{
+        showToast("success", "Login Successful!");
+        localStorage.setItem("token", data.token)
+        window.location.href = "/home"
     }
     console.log(res);
+
 }
 
 main()

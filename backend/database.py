@@ -1,5 +1,6 @@
 from exceptions import DatabaseError
-from utils import hash_password
+from auth import hash_password
+from functools import wraps
 import logging
 
 """
@@ -16,6 +17,7 @@ logging.basicConfig(
 
 #wrapper to catch database errors
 def catch_database_error(func):
+    @wraps(func)
     async def wrapper(*args, **kwargs):
         try:
             return await func(*args, **kwargs)
@@ -40,10 +42,10 @@ async def select_all_users(conn):
 @catch_database_error
 async def select_user(conn, email=None, user_id=None):
     if email:
-        row = convert_fetchrow(await conn.fetchrow("SELECT * FROM users WHERE email = ($1)", email))
+        row = convert_fetchrow(await conn.fetchrow("SELECT id, hashed_password FROM users WHERE email = ($1)", email))
         return row
     elif user_id:
-        row = convert_fetchrow(await conn.fetchrow("SELECT * FROM users WHERE id = ($1)", user_id))
+        row = convert_fetchrow(await conn.fetchrow("SELECT id, first_name, last_name, email, created_at FROM users WHERE id = ($1)", user_id))
         return row    
     else:
         raise ValueError("Provide Email or Userid")
