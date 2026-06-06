@@ -13,7 +13,7 @@ export function showToast(type, toastTitle, toastMessage = ""){
     requestAnimationFrame(() => {
         toast.classList.add('show');
     });
-    toast.addEventListener('transitionend', ()=>{toast.classList.remove('show'), { once: true }})
+    toast.addEventListener('transitionend', ()=>{toast.classList.remove('show')}, { once: true })
 }
 
 export function createToast(){
