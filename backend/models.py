@@ -17,7 +17,7 @@ class RegisterPayLoad(BaseModel):
         cleaned_v = v.strip().lower()
         if "@gmail.com" not in cleaned_v:
             raise ValueError("Please enter a valid gmail address")
-        return v
+        return cleaned_v
     
     @field_validator("password")
     @classmethod
@@ -25,7 +25,7 @@ class RegisterPayLoad(BaseModel):
         cleaned_v = v.strip()
         if len(cleaned_v) < 8:
             raise ValueError("Password must have 8 characters")
-        return v
+        return cleaned_v
     
 class LoginPayLoad(BaseModel):
     email: str
@@ -37,7 +37,7 @@ class LoginPayLoad(BaseModel):
         cleaned_v = v.strip().lower()
         if "@gmail.com" not in cleaned_v:
             raise ValueError("Please enter a valid gmail address")
-        return v
+        return cleaned_v
 
 #=========================================================
 #response_models
