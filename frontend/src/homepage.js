@@ -2,12 +2,12 @@ import { showToast, createToast } from "./utils.js";
 const BASE_URL = `http://127.0.0.1:8000`;
 const DEV_MODE = true; //remove 
 async function main(){ 
+    await checkexpiry();
     const {firstName, lastName} = await getUserInfo();
     const user = localStorage.getItem("user");
     const toastTitle = "Login Successful!";
     let toastMessage = (user==="register")?"Welcome user":"Welcome back user";
     toastMessage+= ` ${firstName} ${lastName}`;
-    await checkexpiry();
     createToast();
     showToast("success", toastTitle, toastMessage);
     setInterval(checkexpiry, 60000)
