@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 import asyncpg
 import jwt
+import os
 
 from models import LoginPayLoad ,RegisterPayLoad\
 ,LoginAuthenticateResponseModel, GetAllUsersResponseModel, GetUserResponseModel\
@@ -14,6 +15,8 @@ from database import logger, select_all_users, create_new_user, select_user
 from exceptions import DatabaseError
 from auth import generate_jwt, check_password, decode_jwt_user_id\
 ,DATABASEURL
+
+DEV_MODE = os.getenv("DEV_MODE", "false").lower() == "true"
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -26,6 +29,8 @@ async def get_db_conn(request: Request):
   
 #dependency to get the user id given the frontend sends a bearer witht the token      
 async def get_current_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False))):
+    if DEV_MODE:
+        return {"id": 1, "username": "dev_user", "role": "admin"}
     try:
         if not authorization:
             raise HTTPException(status_code=401, detail="No credentials provided")
@@ -48,6 +53,9 @@ app.mount("/frontend", StaticFiles(directory=frontend_path), name="static")
 
 @app.get("/")
 def main():
+    if DEV_MODE:
+        print("DEVMODe")
+        return FileResponse(frontend_path/"pages"/"homepage.html")
     return FileResponse(frontend_path/"pages"/"index.html")
 
 @app.get("/home")

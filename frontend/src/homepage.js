@@ -1,5 +1,6 @@
 import { showToast, createToast } from "./utils.js";
 const BASE_URL = `http://127.0.0.1:8000`;
+const DEV_MODE = true; //remove 
 async function main(){ 
     const {firstName, lastName} = await getUserInfo();
     const user = localStorage.getItem("user");
@@ -16,6 +17,9 @@ function getTokenPayload(token){
     return JSON.parse(atob(payload));
 }
 async function getUserInfo(){
+    if (DEV_MODE) {
+        return { firstName: "Dev", lastName: "User" };
+    }
     let url = BASE_URL+"/api/v1/users/me";
     let res = null;
     let data = null;
@@ -32,6 +36,10 @@ async function getUserInfo(){
 }
 
 async function checkexpiry(){
+    if (DEV_MODE) {
+        document.body.style.visibility = "visible";
+        return;
+    }
     const token = localStorage.getItem("token");
     if (!token) { window.location.href = "/"; return; }
     const payload = getTokenPayload(token);
