@@ -54,7 +54,6 @@ app.mount("/frontend", StaticFiles(directory=frontend_path), name="static")
 @app.get("/")
 def main():
     if DEV_MODE:
-        print("DEVMODe")
         return FileResponse(frontend_path/"pages"/"homepage.html")
     return FileResponse(frontend_path/"pages"/"index.html")
 
