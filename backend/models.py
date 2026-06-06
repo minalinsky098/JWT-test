@@ -37,7 +37,7 @@ class LoginPayLoad(BaseModel):
         cleaned_v = v.strip().lower()
         if "@gmail.com" not in cleaned_v:
             raise ValueError("Please enter a valid gmail address")
-        return cleaned_v
+        return v
 
 #=========================================================
 #response_models
