@@ -81,12 +81,12 @@ async function onSubmit(event){
             body: JSON.stringify({email: emailInput.value, password: passwordInput.value})
             });
     }
-    res = await res.json();
     if (!res.ok){
         showToast("error");
-        window.alert(res.detail);
-        }
+    }
     else{
+        res = await res.json();
+        showToast("success");
         localStorage.setItem("token", res.token)
         window.location.href = "/home"
     }
