@@ -1,3 +1,4 @@
+import { showToast, createToast } from "./utils.js";
 const BASE_URL = "http://127.0.0.1:8000";
 const elements = {
     formtitle: null,
@@ -28,6 +29,7 @@ function main(){
 
     elements.form.addEventListener("submit", onSubmit);
     elements.registerButton.addEventListener("click", switchRegister);
+    createToast();
 }
 
 function switchRegister(event){
@@ -81,13 +83,13 @@ async function onSubmit(event){
     }
     res = await res.json();
     if (!res.ok){
-            window.alert(res.detail);
+        showToast("error");
+        window.alert(res.detail);
         }
-        else{
-            res = await res.json();
-            localStorage.setItem("token", res.token)
-            window.location.href = "/home"
-        }
+    else{
+        localStorage.setItem("token", res.token)
+        window.location.href = "/home"
+    }
     console.log(res);
 
 }
