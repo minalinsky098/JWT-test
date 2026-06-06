@@ -1,15 +1,38 @@
 import { showToast, createToast } from "./utils.js";
-const BASE_URL = "http://127.0.0.1:8000";
+const BASE_URL = `http://127.0.0.1:8000`;
 async function main(){ 
+    const {firstName, lastName} = await getUserInfo();
+    const user = localStorage.getItem("user");
+    const toastTitle = "Login Successful!";
+    let toastMessage = (user==="register")?"Welcome user":"Welcome back user";
+    toastMessage+= ` ${firstName} ${lastName}`;
     await checkexpiry();
     createToast();
-    showToast("success",200);
+    showToast("success", toastTitle, toastMessage);
     setInterval(checkexpiry, 60000)
 }
 function getTokenPayload(token){
     const payload = token.split(".")[1];
     return JSON.parse(atob(payload));
 }
+async function getUserInfo(){
+    let url = BASE_URL+"/api/v1/users/me";
+    let res = null;
+    let data = null;
+    const token = localStorage.getItem("token");
+    res = await fetch(url, {
+        headers:{
+            "Content-Type":"application/json",
+            "Authorization":`Bearer ${token}`
+        }
+    });
+    data = await res.json();
+    const {first_name: firstName, last_name: lastName} = data;
+    console.log(data);
+    console.log(firstName, lastName);
+    return {firstName, lastName};
+}
+
 async function checkexpiry(){
     const token = localStorage.getItem("token");
     if (!token) { window.location.href = "/"; return; }
