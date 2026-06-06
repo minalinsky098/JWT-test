@@ -1,5 +1,5 @@
-export function showToast(type, code){
-    const toast = document.querySelector('.toast')
+export function showToast(type, toastTitle, toastMessage = ""){
+    const toast = document.querySelector('.toast');
     if (type==="success"){
         toast.style.borderColor = "#24e50a";
     }
@@ -8,12 +8,12 @@ export function showToast(type, code){
     }
     const title = toast.querySelector('h1');
     const message = toast.querySelector('p');
-    title.textContent = "This is the title";
-    message.textContent = "This is the message";
+    title.textContent = toastTitle;
+    message.textContent = toastMessage;
     requestAnimationFrame(() => {
         toast.classList.add('show');
     });
-    toast.addEventListener('transitionend', ()=>{toast.classList.remove('show')})
+    toast.addEventListener('transitionend', ()=>{toast.classList.remove('show'), { once: true }})
 }
 
 export function createToast(){
@@ -24,8 +24,4 @@ export function createToast(){
     toast.appendChild(message);
     document.body.appendChild(toast);
     toast.classList.add('toast');
-}
-
-function errorhandle(){
-
 }
