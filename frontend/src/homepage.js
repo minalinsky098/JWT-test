@@ -28,8 +28,6 @@ async function getUserInfo(){
     });
     data = await res.json();
     const {first_name: firstName, last_name: lastName} = data;
-    console.log(data);
-    console.log(firstName, lastName);
     return {firstName, lastName};
 }
 
