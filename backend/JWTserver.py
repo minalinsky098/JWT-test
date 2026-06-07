@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from contextlib import asynccontextmanager
 from pathlib import Path
 import asyncpg
@@ -54,7 +54,7 @@ app.mount("/frontend", StaticFiles(directory=frontend_path), name="static")
 @app.get("/")
 def main():
     if DEV_MODE:
-        return FileResponse(frontend_path/"pages"/"homepage.html")
+        return RedirectResponse(url="/home")
     return FileResponse(frontend_path/"pages"/"index.html")
 
 @app.get("/home")
