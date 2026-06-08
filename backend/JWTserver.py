@@ -61,6 +61,16 @@ def main():
 def homepage():
     return FileResponse(frontend_path/"pages"/"homepage.html")
 
+@app.get("/favorites")
+def homepage():
+    #return {"message":"this is the favorites page"}
+    return FileResponse(frontend_path/"pages"/"homepage.html")
+
+@app.get("/profile")
+def homepage():
+    #return {"message":"this is the profile page"}
+    return FileResponse(frontend_path/"pages"/"homepage.html")
+
 @app.post("/api/v1/login", status_code = 200, response_model = LoginAuthenticateResponseModel, responses = login_responses)
 async def login_user(payload: LoginPayLoad, connection = Depends(get_db_conn)):
     try:
