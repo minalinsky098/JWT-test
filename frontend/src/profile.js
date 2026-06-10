@@ -6,11 +6,13 @@ async function main(){
     const {firstName, lastName} = await getUserInfo();
     const user = localStorage.getItem("user");
     const toastTitle = "Login Successful!";
+    const firstNameInput = document.querySelector("#firstNameInput");
+    const lastNameInput = document.querySelector("#lastNameInput");
     let toastMessage = (user==="register")?"Welcome user":"Welcome back user";
     toastMessage+= ` ${firstName} ${lastName}`;
     createToast();
     showToast("success", toastTitle, toastMessage);
-    setProfileName({firstName, lastName});
+    setProfileName({firstName, lastName}, firstNameInput, lastNameInput);
     setInterval(checkexpiry, 60000)
 }
 function getTokenPayload(token){
@@ -18,10 +20,8 @@ function getTokenPayload(token){
     const payloadB64 = payload.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(payload.length / 4) * 4, "=");
     return JSON.parse(atob(payloadB64));
 }
-function setProfileName(username){
+function setProfileName(firstNameInput, lastNameInput, username){
     let {firstName, lastName} = username;
-    let firstNameInput = document.querySelector("#firstNameInput");
-    let lastNameInput = document.querySelector("#lastNameInput");
     console.log(firstName, lastName);
     console.log(firstNameInput.value, lastNameInput.value)
     firstNameInput.value = firstName;
