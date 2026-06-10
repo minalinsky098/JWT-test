@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
-    <link rel= "stylesheet" href="frontend/css/homepage.css"/>
+    <link rel= "stylesheet" href="frontend/css/profile.css"/>
     <link rel = "stylesheet" href = "frontend/css/utils.css"/>
 </head>
 <body>
@@ -33,8 +33,19 @@
         </a>
     </nav>
     <main>
+        <form>
+            <div id="firstNameInput-group">
+                <label for="firstNameInput">Change First Name: </label>
+                <input type="text" placeholder="MYFIRSTNAME" id="firstNameInput">
+            </div>
+            <div id="lastNameInput-group">
+                <label for="lastNameInput">Change last Name: </label>
+                <input type="text" placeholder="MYLASTNAME" id="lastNameInput">
+            </div>
+            <button id="submit">Change Name</button>
+        </form>
         <p>This is the content page</p>
     </main>
-<script type = "module" src="frontend/src/homepage.js"></script>
+<script type = "module" src="frontend/src/profile.js"></script>
 </body>
 </html>
