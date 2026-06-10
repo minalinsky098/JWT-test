@@ -129,6 +129,3 @@ async def get_user(user_id = Depends(get_current_user_id), connection=Depends(ge
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal server error")
     
-@app.get("/api/v1/devmode")
-def devmode():
-    return {"devmode": DEV_MODE}
