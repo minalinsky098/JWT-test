@@ -10,12 +10,22 @@ async function main(){
     toastMessage+= ` ${firstName} ${lastName}`;
     createToast();
     showToast("success", toastTitle, toastMessage);
+    setProfileName({firstName, lastName});
     setInterval(checkexpiry, 60000)
 }
 function getTokenPayload(token){
     const payload = token.split(".")[1];
     const payloadB64 = payload.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(payload.length / 4) * 4, "=");
     return JSON.parse(atob(payloadB64));
+}
+function setProfileName(username){
+    let {firstName, lastName} = username;
+    let firstNameInput = document.querySelector("#firstNameInput");
+    let lastNameInput = document.querySelector("#lastNameInput");
+    console.log(firstName, lastName);
+    console.log(firstNameInput.value, lastNameInput.value)
+    firstNameInput.value = firstName;
+    lastNameInput.value = lastName;
 }
 async function getUserInfo(){
     if (DEV_MODE) {
