@@ -64,7 +64,7 @@ def homepage():
 @app.get("/favorites")
 def homepage():
     #return {"message":"this is the favorites page"}
-    return FileResponse(frontend_path/"pages"/"facovites.html")
+    return FileResponse(frontend_path/"pages"/"favorites.html")
 
 @app.get("/profile")
 def homepage():
