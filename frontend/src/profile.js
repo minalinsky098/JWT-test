@@ -54,6 +54,7 @@ async function checkexpiry(){
         document.body.style.visibility = "visible";
         return;
     }
+    console.log("Checking for expiry");
     const token = localStorage.getItem("token");
     if (!token) { 
         window.location.href = "/";

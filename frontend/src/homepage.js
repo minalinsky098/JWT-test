@@ -27,6 +27,7 @@ async function getUserInfo(){
     if (DEV_MODE) {
         return { firstName: "Dev", lastName: "User" };
     }
+    console.log("Checking for expiry");
     let url = BASE_URL+"/api/v1/users/me";
     let res = null;
     let data = null;
