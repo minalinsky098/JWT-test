@@ -26,7 +26,6 @@ function main(){
     elements.firstNameGroup = document.querySelector("#firstName-group");
     elements.lastNameGroup = document.querySelector("#lastName-group");
     elements.submitButton = document.querySelector("#submit");
-
     elements.form.addEventListener("submit", onSubmit);
     elements.registerButton.addEventListener("click", switchRegister);
     createToast();

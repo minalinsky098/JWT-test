@@ -3,17 +3,23 @@ const BASE_URL = `http://127.0.0.1:8000`;
 const DEV_MODE = true; //remove 
 async function main(){ 
     await checkexpiry();
+    createToast();
+    const userStatus = window.localStorage.getItem("userstatus")
     const {firstName, lastName} = await getUserInfo();
     const user = localStorage.getItem("user");
     const toastTitle = "Login Successful!";
     const firstNameInput = document.querySelector("#firstNameInput");
     const lastNameInput = document.querySelector("#lastNameInput");
     let toastMessage = (user==="register")?"Welcome user":"Welcome back user";
+
     toastMessage+= ` ${firstName} ${lastName}`;
-    createToast();
-    showToast("success", toastTitle, toastMessage);
-    setProfileName({firstName, lastName}, firstNameInput, lastNameInput);
+
+    if (userStatus!=="online"){
+            showToast("success", toastTitle, toastMessage);
+    }
+    setProfileName(firstNameInput, lastNameInput, {firstName, lastName});
     setInterval(checkexpiry, 60000)
+    window.localStorage.setItem("userstatus", "online")
 }
 function getTokenPayload(token){
     const payload = token.split(".")[1];
@@ -52,10 +58,15 @@ async function checkexpiry(){
         return;
     }
     const token = localStorage.getItem("token");
-    if (!token) { window.location.href = "/"; return; }
+    if (!token) { 
+        window.location.href = "/";
+        window.localStorage.setItem("userstatus", "offline") 
+        return; 
+    }
     const payload = getTokenPayload(token);
     const isExpired = payload.exp * 1000 < Date.now();
     if (isExpired){
+        window.localStorage.setItem("userstatus", "offline")
         window.location.href = "/";
         return;
     }
