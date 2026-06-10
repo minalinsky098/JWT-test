@@ -1,6 +1,6 @@
 import { showToast, createToast } from "./utils.js";
 const BASE_URL = `http://127.0.0.1:8000`;
-const DEV_MODE = true; //remove 
+const DEV_MODE = false; //remove 
 async function main(){ 
     await checkexpiry();
     createToast();
@@ -10,6 +10,7 @@ async function main(){
     const toastTitle = "Login Successful!";
     const firstNameInput = document.querySelector("#firstNameInput");
     const lastNameInput = document.querySelector("#lastNameInput");
+    const logout = document.querySelector("#logout-link")
     let toastMessage = (user==="register")?"Welcome user":"Welcome back user";
 
     toastMessage+= ` ${firstName} ${lastName}`;
@@ -19,7 +20,12 @@ async function main(){
     }
     setProfileName(firstNameInput, lastNameInput, {firstName, lastName});
     setInterval(checkexpiry, 60000)
-    window.localStorage.setItem("userstatus", "online")
+    logout.addEventListener("click", logoutHandler);
+
+    window.localStorage.setItem("userstatus", "online");
+}
+function logoutHandler(){
+    window.localStorage.setItem("userstatus", "offline");
 }
 function getTokenPayload(token){
     const payload = token.split(".")[1];
@@ -27,6 +33,7 @@ function getTokenPayload(token){
     return JSON.parse(atob(payloadB64));
 }
 function setProfileName(firstNameInput, lastNameInput, username){
+    const {firstName, lastName} = username;
     firstNameInput.value = firstName;
     lastNameInput.value = lastName;
 }
