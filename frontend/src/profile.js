@@ -27,9 +27,6 @@ function getTokenPayload(token){
     return JSON.parse(atob(payloadB64));
 }
 function setProfileName(firstNameInput, lastNameInput, username){
-    let {firstName, lastName} = username;
-    console.log(firstName, lastName);
-    console.log(firstNameInput.value, lastNameInput.value)
     firstNameInput.value = firstName;
     lastNameInput.value = lastName;
 }
