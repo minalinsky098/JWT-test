@@ -100,5 +100,5 @@ get_user_responses = {
 update_user_responses = {
     **general_response,
     401 : {"model": GeneralErrorModel, "description" : "Invalid credentials"},
-    403 : {"model": GeneralErrorModel, "description": "Unauthorized access"}
+    404 : {"model": GeneralErrorModel, "description": "User not found"}
 }
