@@ -2,13 +2,13 @@ import { showToast, createToast } from "./utils.js";
 const BASE_URL = `http://127.0.0.1:8000`;
 const DEV_MODE = true; //remove 
 const elements = {
-    logout = null
+    logout: null
 }
 
 async function main(){ 
     await checkexpiry();
     createToast();
-    
+
     const userStatus = window.localStorage.getItem("userstatus")
     const {firstName, lastName} = await getUserInfo();
     const user = localStorage.getItem("user");
