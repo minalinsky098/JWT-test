@@ -39,6 +39,17 @@ class LoginPayLoad(BaseModel):
             raise ValueError("Please enter a valid gmail address")
         return cleaned_v
 
+class UpdateUserPayload(BaseModel):
+    first_name : str
+    last_name : str
+    
+    @field_validator("first_name", "last_name")
+    @classmethod
+    def check_empty_input(cls, v):
+        cleaned_v = v.strip()
+        if not cleaned_v:
+            raise ValueError("Please enter all fields")
+        return cleaned_v
 #=========================================================
 #response_models
 class LoginAuthenticateResponseModel(BaseModel): #200/201
@@ -55,6 +66,9 @@ class GetUserResponseModel(BaseModel):
     email: str
     created_at: datetime
 
+class UpdateUserResponseModel(BaseModel):
+    first_name : str
+    last_name : str
 #================================================
 #error_models  
 class GeneralErrorModel(BaseModel): #500
@@ -81,4 +95,10 @@ get_all_users_responses = {
 
 get_user_responses = {
     **login_responses
+}
+
+update_user_responses = {
+    **general_response,
+    401 : {"model": GeneralErrorModel, "description" : "Invalid credentials"},
+    403 : {"model": GeneralErrorModel, "description": "Unauthorized access"}
 }
