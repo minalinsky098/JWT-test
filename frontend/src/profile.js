@@ -1,26 +1,35 @@
 import { showToast, createToast } from "./utils.js";
 const BASE_URL = `http://127.0.0.1:8000`;
-const DEV_MODE = false; //remove 
+const elements = {
+    firstNameInput = null,
+    lastNameInput = null,
+    logout = null
+}
+const DEV_MODE = true; //remove 
 async function main(){ 
     await checkexpiry();
     createToast();
+
     const userStatus = window.localStorage.getItem("userstatus")
     const {firstName, lastName} = await getUserInfo();
     const user = localStorage.getItem("user");
     const toastTitle = "Login Successful!";
-    const firstNameInput = document.querySelector("#firstNameInput");
-    const lastNameInput = document.querySelector("#lastNameInput");
-    const logout = document.querySelector("#logout-link")
+
+    elements.firstNameInput = document.querySelector("#firstNameInput");
+    elements.lastNameInput = document.querySelector("#lastNameInput");
+    elements.logout = document.querySelector("#logout-link")
+
     let toastMessage = (user==="register")?"Welcome user":"Welcome back user";
 
     toastMessage+= ` ${firstName} ${lastName}`;
 
     if (userStatus!=="online"){
-            showToast("success", toastTitle, toastMessage);
+        showToast("success", toastTitle, toastMessage);
     }
-    setProfileName(firstNameInput, lastNameInput, {firstName, lastName});
+
+    setProfileName({firstName, lastName});
     setInterval(checkexpiry, 60000)
-    logout.addEventListener("click", logoutHandler);
+    elements.logout.addEventListener("click", logoutHandler);
 
     window.localStorage.setItem("userstatus", "online");
 }
@@ -32,10 +41,10 @@ function getTokenPayload(token){
     const payloadB64 = payload.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(payload.length / 4) * 4, "=");
     return JSON.parse(atob(payloadB64));
 }
-function setProfileName(firstNameInput, lastNameInput, username){
+function setProfileName(username){
     const {firstName, lastName} = username;
-    firstNameInput.value = firstName;
-    lastNameInput.value = lastName;
+    elements.firstNameInput.value = firstName;
+    elements.lastNameInput.value = lastName;
 }
 async function getUserInfo(){
     if (DEV_MODE) {

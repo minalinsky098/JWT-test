@@ -1,14 +1,21 @@
 import { showToast, createToast } from "./utils.js";
 const BASE_URL = `http://127.0.0.1:8000`;
-const DEV_MODE = false; //remove 
+const DEV_MODE = true; //remove 
+const elements = {
+    logout = null
+}
+
 async function main(){ 
     await checkexpiry();
     createToast();
+    
     const userStatus = window.localStorage.getItem("userstatus")
     const {firstName, lastName} = await getUserInfo();
     const user = localStorage.getItem("user");
     const toastTitle = "Login Successful!";
-    const logout = document.querySelector("#logout-link");
+
+    elements.logout = document.querySelector("#logout-link");
+
     let toastMessage = (user==="register")?"Welcome user":"Welcome back user";
 
     toastMessage+= ` ${firstName} ${lastName}`;
@@ -17,7 +24,7 @@ async function main(){
             showToast("success", toastTitle, toastMessage);
     }
 
-    logout.addEventListener("click", logoutHandler);
+    elements.logout.addEventListener("click", logoutHandler);
     setInterval(checkexpiry, 60000)
 
     window.localStorage.setItem("userstatus", "online")
