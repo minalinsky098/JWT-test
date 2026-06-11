@@ -116,7 +116,7 @@ async def get_users(connection = Depends(get_db_conn)):
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal server error")
     
-@app.get("/api/v1/users/me", status_code=200, response_model=GetUserResponseModel, responses= get_user_responses)
+@app.get("/api/v1/users/me", status_code = 200, response_model=GetUserResponseModel, responses= get_user_responses)
 async def get_user(user_id = Depends(get_current_user_id), connection=Depends(get_db_conn)):
     try:
         user = await select_user(user_id=user_id, conn=connection)
@@ -128,4 +128,7 @@ async def get_user(user_id = Depends(get_current_user_id), connection=Depends(ge
     except DatabaseError as e: 
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal server error")
-    
+
+@app.put("/api/v1/users", status_code = 200)
+async def update_user_name(user_id = Depends(get_current_user_id), connection = Depends(get_db_conn)):
+    pass
