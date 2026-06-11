@@ -8,10 +8,10 @@ import asyncpg
 import jwt
 import os
 
-from models import LoginPayLoad ,RegisterPayLoad\
-,LoginAuthenticateResponseModel, GetAllUsersResponseModel, GetUserResponseModel\
-,auth_responses, login_responses, get_all_users_responses, get_user_responses
-from database import logger, select_all_users, create_new_user, select_user
+from models import LoginPayLoad ,RegisterPayLoad, UpdateUserPayload\
+,LoginAuthenticateResponseModel, GetAllUsersResponseModel, GetUserResponseModel, UpdateUserResponseModel\
+,auth_responses, login_responses, get_all_users_responses, get_user_responses, update_user_responses
+from database import logger, select_all_users, create_new_user, select_user, update_user
 from exceptions import DatabaseError
 from auth import generate_jwt, check_password, decode_jwt_user_id\
 ,DATABASEURL
@@ -129,6 +129,15 @@ async def get_user(user_id = Depends(get_current_user_id), connection=Depends(ge
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal server error")
 
-@app.put("/api/v1/users", status_code = 200)
-async def update_user_name(user_id = Depends(get_current_user_id), connection = Depends(get_db_conn)):
-    pass
+@app.put("/api/v1/users", status_code = 200, response_model=UpdateUserResponseModel, responses=update_user_responses)
+async def update_user_name(payload: UpdateUserPayload, user_id = Depends(get_current_user_id), connection = Depends(get_db_conn)):
+    try:
+        updated_user = await update_user(first_name = payload.first_name, last_name = payload.last_name, user_id = user_id, conn = connection)
+        if not updated_user:
+            raise HTTPException(status_code = 404, detail="User not found")
+        return updated_user 
+    except HTTPException: 
+        raise
+    except DatabaseError as e: 
+        logger.error(str(e))
+        raise HTTPException(status_code=500, detail="Internal server error")
