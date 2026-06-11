@@ -63,7 +63,7 @@ async def create_new_user(first_name, last_name, password, email, conn):
     return convert_fetchrow(row)
 
 @catch_database_error
-async def upadate_user(conn, user_id, first_name, last_name):
+async def update_user(conn, user_id, first_name, last_name):
     row = await conn.fetchrow(
         """
         UPDATE users
