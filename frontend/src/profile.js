@@ -48,8 +48,6 @@ async function updateUsername(event){
     let toastTitle = null;
     let toastMessage = null;
 
-    console.log(firstName, lastName)
-    console.log(`Fetching from ${URL}`)
     if (!firstName || !lastName){
         toastTitle  = "Invalid Input";
         toastMessage = "Please fill out every field!!"
