@@ -30,7 +30,7 @@ async def get_db_conn(request: Request):
 #dependency to get the user id given the frontend sends a bearer witht the token      
 async def get_current_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False))):
     if DEV_MODE:
-        return {"user_id": "1", "username": "dev_user", "role": "admin"}
+        return "ff17a787-8ae0-49f3-a93a-966e90659360"
     try:
         if not authorization:
             raise HTTPException(status_code=401, detail="No credentials provided")
@@ -133,7 +133,9 @@ async def get_user(user_id = Depends(get_current_user_id), connection=Depends(ge
 async def update_user_name(payload: UpdateUserPayload, user_id = Depends(get_current_user_id), connection = Depends(get_db_conn)):
     try:
         updated_user = await update_user(first_name = payload.first_name, last_name = payload.last_name, user_id = user_id, conn = connection)
+        print(updated_user)
         if not updated_user:
+            print("raise 404")
             raise HTTPException(status_code = 404, detail="User not found")
         return updated_user 
     except HTTPException: 
