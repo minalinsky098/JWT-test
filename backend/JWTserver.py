@@ -62,12 +62,12 @@ def homepage():
     return FileResponse(frontend_path/"pages"/"homepage.html")
 
 @app.get("/favorites")
-def homepage():
+def favoritepage():
     #return {"message":"this is the favorites page"}
     return FileResponse(frontend_path/"pages"/"favorites.html")
 
 @app.get("/profile")
-def homepage():
+def profilepage():
     #return {"message":"this is the profile page"}
     return FileResponse(frontend_path/"pages"/"profile.html")
 
@@ -143,3 +143,4 @@ async def update_user_name(payload: UpdateUserPayload, user_id = Depends(get_cur
     except DatabaseError as e: 
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal server error")
+    
