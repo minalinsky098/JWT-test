@@ -1,17 +1,17 @@
 from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from contextlib import asynccontextmanager
 from pathlib import Path
 import asyncpg
 import jwt
 import os
 
-from models import LoginPayLoad ,RegisterPayLoad\
-,LoginAuthenticateResponseModel, GetAllUsersResponseModel, GetUserResponseModel\
-,auth_responses, login_responses, get_all_users_responses, get_user_responses
-from database import logger, select_all_users, create_new_user, select_user
+from models import LoginPayLoad ,RegisterPayLoad, UpdateUserPayload\
+,LoginAuthenticateResponseModel, GetAllUsersResponseModel, GetUserResponseModel, UpdateUserResponseModel\
+,auth_responses, login_responses, get_all_users_responses, get_user_responses, update_user_responses
+from database import logger, select_all_users, create_new_user, select_user, update_user
 from exceptions import DatabaseError
 from auth import generate_jwt, check_password, decode_jwt_user_id\
 ,DATABASEURL
@@ -30,7 +30,7 @@ async def get_db_conn(request: Request):
 #dependency to get the user id given the frontend sends a bearer witht the token      
 async def get_current_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False))):
     if DEV_MODE:
-        return {"id": 1, "username": "dev_user", "role": "admin"}
+        return "f7bab17f-e834-4ee8-89ca-50638dbfd705"
     try:
         if not authorization:
             raise HTTPException(status_code=401, detail="No credentials provided")
@@ -54,13 +54,22 @@ app.mount("/frontend", StaticFiles(directory=frontend_path), name="static")
 @app.get("/")
 def main():
     if DEV_MODE:
-        print("DEVMODe")
-        return FileResponse(frontend_path/"pages"/"homepage.html")
+        return RedirectResponse(url="/home")
     return FileResponse(frontend_path/"pages"/"index.html")
 
 @app.get("/home")
 def homepage():
     return FileResponse(frontend_path/"pages"/"homepage.html")
+
+@app.get("/favorites")
+def favoritepage():
+    #return {"message":"this is the favorites page"}
+    return FileResponse(frontend_path/"pages"/"favorites.html")
+
+@app.get("/profile")
+def profilepage():
+    #return {"message":"this is the profile page"}
+    return FileResponse(frontend_path/"pages"/"profile.html")
 
 @app.post("/api/v1/login", status_code = 200, response_model = LoginAuthenticateResponseModel, responses = login_responses)
 async def login_user(payload: LoginPayLoad, connection = Depends(get_db_conn)):
@@ -107,7 +116,7 @@ async def get_users(connection = Depends(get_db_conn)):
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal server error")
     
-@app.get("/api/v1/users/me", status_code=200, response_model=GetUserResponseModel, responses= get_user_responses)
+@app.get("/api/v1/users/me", status_code = 200, response_model=GetUserResponseModel, responses= get_user_responses)
 async def get_user(user_id = Depends(get_current_user_id), connection=Depends(get_db_conn)):
     try:
         user = await select_user(user_id=user_id, conn=connection)
@@ -119,5 +128,19 @@ async def get_user(user_id = Depends(get_current_user_id), connection=Depends(ge
     except DatabaseError as e: 
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal server error")
-    
+
+@app.put("/api/v1/users", status_code = 200, response_model=UpdateUserResponseModel, responses=update_user_responses)
+async def update_user_name(payload: UpdateUserPayload, user_id = Depends(get_current_user_id), connection = Depends(get_db_conn)):
+    try:
+        updated_user = await update_user(first_name = payload.first_name, last_name = payload.last_name, user_id = user_id, conn = connection)
+        print(updated_user)
+        if not updated_user:
+            print("raise 404")
+            raise HTTPException(status_code = 404, detail="User not found")
+        return updated_user 
+    except HTTPException: 
+        raise
+    except DatabaseError as e: 
+        logger.error(str(e))
+        raise HTTPException(status_code=500, detail="Internal server error")
     

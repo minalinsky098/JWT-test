@@ -26,7 +26,6 @@ function main(){
     elements.firstNameGroup = document.querySelector("#firstName-group");
     elements.lastNameGroup = document.querySelector("#lastName-group");
     elements.submitButton = document.querySelector("#submit");
-
     elements.form.addEventListener("submit", onSubmit);
     elements.registerButton.addEventListener("click", switchRegister);
     createToast();
@@ -88,19 +87,22 @@ async function onSubmit(event){
     }
     data = await res.json();
     if (!res.ok){
-        toastTitle = "Login Unsuccesful!!";
+        toastTitle = register?"Register Unsuccessful":"Login Unsuccessful";
         switch (res.status){
             case 401:
-                if (data.detail.includes("password")){
+                if (data.detail.includes("password") && typeof data.detail === "string"){
                     toastMessage = "Invalid password, enter the correct password";
                 }
-                else if((data.detail.includes("registered"))){
+                else if((data.detail.includes("registered")) && typeof data.detail === "string"){
                     toastMessage = "This user is not registered, use the register button to register an account";
                 }
                 break;
             case 409:
                 toastMessage = "This user is already registered, Please use the login button to login.";
                 break;
+            case 422:
+                 toastMessage = "Please check the form fields and try again.";
+                 break;
             case 500:
                 toastMessage = "Server Error, Please Try Again.";
                 break;
@@ -108,11 +110,9 @@ async function onSubmit(event){
         showToast("error", toastTitle, toastMessage);
     }
     else{
-        showToast("success", "Login Successful!");
         localStorage.setItem("token", data.token)
         window.location.href = "/home"
     }
-    console.log(res);
 
 }
 
