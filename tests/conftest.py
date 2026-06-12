@@ -6,7 +6,8 @@ from backend.auth import generate_jwt
 
 @pytest.fixture
 def client():
-    return TestClient(app)
+    with TestClient(app) as c:
+        yield c
 
 @pytest.fixture
 def token():
