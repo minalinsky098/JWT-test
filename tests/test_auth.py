@@ -23,7 +23,7 @@ async def test_jwt():
     
     tampered_jwt = list(user_jwt)
     tampered_jwt[0] = " "
-    "".join(tampered_jwt)
+    tampered_jwt = "".join(tampered_jwt)
     decoded_id = auth.decode_jwt_user_id(user_jwt)
         
     assert user_id == decoded_id
