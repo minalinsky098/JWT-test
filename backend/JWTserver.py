@@ -9,9 +9,9 @@ import jwt
 import os
 
 from models import LoginPayLoad ,RegisterPayLoad, UpdateUserPayload\
-,LoginAuthenticateResponseModel, GetAllUsersResponseModel, GetUserResponseModel, UpdateUserResponseModel\
-,auth_responses, login_responses, get_all_users_responses, get_user_responses, update_user_responses
-from database import logger, select_all_users, create_new_user, select_user, update_user
+,LoginAuthenticateResponseModel, GetAllUsersResponseModel, GetUserResponseModel, UpdateUserResponseModel, DeleteUserResponseModel\
+,auth_responses, login_responses, get_all_users_responses, get_user_responses, update_user_responses, delete_user_responses
+from database import logger, select_all_users, create_new_user, select_user, update_user, delete_user
 from exceptions import DatabaseError
 from auth import generate_jwt, check_password, decode_jwt_user_id\
 ,DATABASEURL
@@ -142,3 +142,15 @@ async def update_user_name(payload: UpdateUserPayload, user_id = Depends(get_cur
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal server error")
     
+@app.delete("/api/v1/users", status_code = 200, response_model=DeleteUserResponseModel, responses=delete_user_responses)
+async def delete_user_by_id(user_id = Depends(get_current_user_id), connection = Depends(get_db_conn)):
+    try: 
+        res = await delete_user(user_id=user_id, conn=connection)
+        if not res:
+            raise HTTPException(status_code = 404, detail = "User not found")
+        return {"message": "user has been deleted", "id" : res["id"]}
+    except HTTPException:
+        raise
+    except DatabaseError as e:
+        logger.error(str(e))
+        raise HTTPException(status_code=500, detail="Internal server error")
