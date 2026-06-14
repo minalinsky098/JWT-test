@@ -110,5 +110,6 @@ update_user_responses = {
 
 delete_user_responses = {
     **general_response,
+    401 : {"model": GeneralErrorModel, "description" : "Invalid credentials"},
     404 : {"model": GeneralErrorModel, "description": "User not found"}
 }
