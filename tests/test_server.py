@@ -1,5 +1,8 @@
 import pytest
+from unittest.mock import patch, AsyncMock
 from fastapi.testclient import TestClient
+from backend.exceptions import DatabaseError
+
 
 async def test_get_all_users(client):
     res = client.get("/api/v1/users")
@@ -43,4 +46,13 @@ async def test_login_happy(client):
     assert data["token"] is not None
     assert data["token"] != ""
     assert data["detail"] == "User logged in"    
-    
+  
+async def test_login_database_error(client):
+    with patch("backend.JWTserver.select_user", new_callable=AsyncMock) as mock_select_user:
+        mock_select_user.side_effect = DatabaseError
+        
+        payload = {"email": "alboloter@gmail.com","password":"mypassword"}
+        res = client.post("/api/v1/login", json = payload)
+        assert res.status_code == 500
+        assert res.json()["detail"] == "Internal Server Error"
+  
