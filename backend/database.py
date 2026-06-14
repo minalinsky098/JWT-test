@@ -72,3 +72,8 @@ async def update_user(conn, user_id, first_name, last_name):
         RETURNING first_name, last_name
         """, first_name, last_name, user_id)
     return convert_fetchrow(row)
+
+@catch_database_error
+async def delete_user(conn, user_id):
+    row = await conn.fetchrow("DELETE FROM users WHERE id = ($1) RETURNING id", user_id)
+    return convert_fetchrow(row)
