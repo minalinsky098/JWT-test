@@ -69,6 +69,11 @@ class GetUserResponseModel(BaseModel):
 class UpdateUserResponseModel(BaseModel):
     first_name : str
     last_name : str
+
+class DeleteUserResponseModel(BaseModel):
+    message: str
+    id : str
+    
 #================================================
 #error_models  
 class GeneralErrorModel(BaseModel): #500
@@ -100,5 +105,10 @@ get_user_responses = {
 update_user_responses = {
     **general_response,
     401 : {"model": GeneralErrorModel, "description" : "Invalid credentials"},
+    404 : {"model": GeneralErrorModel, "description": "User not found"}
+}
+
+delete_user_responses = {
+    **general_response,
     404 : {"model": GeneralErrorModel, "description": "User not found"}
 }
