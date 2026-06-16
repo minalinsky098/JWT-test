@@ -72,7 +72,7 @@ class UpdateUserResponseModel(BaseModel):
 
 class DeleteUserResponseModel(BaseModel):
     message: str
-    id : str
+    id : UUID
     
 #================================================
 #error_models  
