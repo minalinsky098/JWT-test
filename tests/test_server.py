@@ -85,3 +85,7 @@ async def test_update_user_not_found(client, setup_header):
     client.delete("/api/v1/users", headers=setup_header)
     res = client.put("/api/v1/users", json = update_payload,headers=setup_header)
     assert res.status_code == 404
+    
+async def test_get_current_user(client, setup_header):
+    res = client.get("/api/v1/users/me", headers=setup_header)
+    assert res.status_code == 200
