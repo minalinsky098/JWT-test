@@ -9,9 +9,9 @@ import jwt
 import os
 
 from models import LoginPayLoad ,RegisterPayLoad, UpdateUserPayload\
-,LoginAuthenticateResponseModel, GetAllUsersResponseModel, GetUserResponseModel, UpdateUserResponseModel\
-,auth_responses, login_responses, get_all_users_responses, get_user_responses, update_user_responses
-from database import logger, select_all_users, create_new_user, select_user, update_user
+,LoginAuthenticateResponseModel, GetAllUsersResponseModel, GetUserResponseModel, UpdateUserResponseModel, DeleteUserResponseModel\
+,auth_responses, login_responses, get_all_users_responses, get_user_responses, update_user_responses, delete_user_responses
+from database import logger, select_all_users, create_new_user, select_user, update_user, delete_user
 from exceptions import DatabaseError
 from auth import generate_jwt, check_password, decode_jwt_user_id\
 ,DATABASEURL
@@ -30,7 +30,7 @@ async def get_db_conn(request: Request):
 #dependency to get the user id given the frontend sends a bearer witht the token      
 async def get_current_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False))):
     if DEV_MODE:
-        return "f7bab17f-e834-4ee8-89ca-50638dbfd705"
+        return "498592a0-5408-487d-aa0d-1cd6be2d0853"
     try:
         if not authorization:
             raise HTTPException(status_code=401, detail="No credentials provided")
@@ -133,14 +133,25 @@ async def get_user(user_id = Depends(get_current_user_id), connection=Depends(ge
 async def update_user_name(payload: UpdateUserPayload, user_id = Depends(get_current_user_id), connection = Depends(get_db_conn)):
     try:
         updated_user = await update_user(first_name = payload.first_name, last_name = payload.last_name, user_id = user_id, conn = connection)
-        print(updated_user)
         if not updated_user:
-            print("raise 404")
             raise HTTPException(status_code = 404, detail="User not found")
         return updated_user 
     except HTTPException: 
         raise
     except DatabaseError as e: 
+        logger.error(str(e))
+        raise HTTPException(status_code=500, detail="Internal server error")
+    
+@app.delete("/api/v1/users", status_code = 200, response_model=DeleteUserResponseModel, responses=delete_user_responses)
+async def delete_user_by_id(user_id = Depends(get_current_user_id), connection = Depends(get_db_conn)):
+    try: 
+        res = await delete_user(user_id=user_id, conn=connection)
+        if not res:
+            raise HTTPException(status_code = 404, detail = "User not found")
+        return {"message": "user has been deleted", "id" : res["id"]}
+    except HTTPException:
+        raise
+    except DatabaseError as e:
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal server error")
     
