@@ -30,7 +30,7 @@ async def get_db_conn(request: Request):
 #dependency to get the user id given the frontend sends a bearer witht the token      
 async def get_current_user_id(authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False))):
     if DEV_MODE:
-        return "f7bab17f-e834-4ee8-89ca-50638dbfd705"
+        return "498592a0-5408-487d-aa0d-1cd6be2d0853"
     try:
         if not authorization:
             raise HTTPException(status_code=401, detail="No credentials provided")
@@ -154,3 +154,4 @@ async def delete_user_by_id(user_id = Depends(get_current_user_id), connection =
     except DatabaseError as e:
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal server error")
+    
