@@ -30,6 +30,7 @@ header h1 {
     font-size: 2rem; 
 }
 nav{
+    width: 4rem;
     background: #DDD9CE;
     color: #171613;
     display: flex;
@@ -53,7 +54,7 @@ nav a {
 }
 
 main {
-    margin-left: 200px; 
+    margin-left: 4rem; 
     font-family: 'Quicksand', sans-serif;
     display: flex;
     flex-direction: column;
