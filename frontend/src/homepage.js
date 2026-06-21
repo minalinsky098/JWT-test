@@ -31,6 +31,8 @@ async function main(){
 }
 function logoutHandler(){
     window.localStorage.setItem("userstatus", "offline");
+    window.localStorage.removeItem("token")
+    window.location.href = "/";
 }
 function getTokenPayload(token){
     const payload = token.split(".")[1];
@@ -38,9 +40,6 @@ function getTokenPayload(token){
     return JSON.parse(atob(payloadB64));
 }
 async function getUserInfo(){
-    if (DEV_MODE) {
-        return { firstName: "Dev", lastName: "User" };
-    }
     console.log("Checking for expiry");
     let url = BASE_URL+"/api/v1/users/me";
     let res = null;
