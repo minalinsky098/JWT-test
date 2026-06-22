@@ -1,14 +1,7 @@
 from httpx import AsyncClient
 import os 
 import asyncio
-import logging
 from dotenv import load_dotenv
-
-logger = logging.getLogger(__name__)
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s"
-)
 
 load_dotenv()
 CAT_API = os.getenv("CATAPI")
@@ -26,6 +19,6 @@ async def fetch_cats(limit: int = 45):
             for cat in data:
                 normalized_fetch.append({"url":cat["url"], "breed":cat["breeds"][0]["name"], "description":cat["breeds"][0]["description"]})
             return normalized_fetch
-    except Exception as e:
+    except Exception:
         raise
 
