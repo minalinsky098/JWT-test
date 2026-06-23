@@ -40,7 +40,7 @@ nav{
     text-orientation: upright;
     align-items: center;
     justify-content: center;
-    position: fixed;
+    position: absolute;
     border-right: 1px solid #C4BFB2;
 }
 nav img{
