@@ -75,7 +75,7 @@ class DeleteUserResponseModel(BaseModel):
     id : UUID
     
 class FetchCatsResponseModel(BaseModel):
-    list[dict]
+    cats: list[dict]
     
 #================================================
 #error_models  
