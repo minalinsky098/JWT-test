@@ -175,7 +175,7 @@ async def delete_user_by_id(user_id = Depends(get_current_user_id), connection =
   
   
   
-@app.post("/api/v1/users/fetch", status_code = 200, response_model = FetchCatsResponseModel, responses = fetch_cats_responses)
+@app.get("/api/v1/users/fetch", status_code = 200, response_model = FetchCatsResponseModel, responses = fetch_cats_responses)
 async def get_cats(user_id = Depends(get_current_user_id), connection = Depends(get_db_conn)):
     try:
         res = await select_user(user_id = user_id, conn = connection)
