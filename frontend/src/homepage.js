@@ -7,6 +7,7 @@ const elements = {
 
 async function main(){ 
     await checkexpiry();
+    await getCats();
     createToast();
 
     const userStatus = window.localStorage.getItem("userstatus")
@@ -29,6 +30,19 @@ async function main(){
 
     window.localStorage.setItem("userstatus", "online")
 }
+async function getCats(){
+    const fetch_url = BASE_URL+"/api/v1/users/fetch";
+    const token = localStorage.getItem("token");
+    let res = await fetch(fetch_url, {
+        headers:{
+        "Authorization": `Bearer ${token}`
+        }
+    })
+    let data = await res.json();
+    console.log(res);
+    console.log(data);
+}
+
 function logoutHandler(){
     window.localStorage.setItem("userstatus", "offline");
     window.localStorage.removeItem("token")
@@ -47,7 +61,6 @@ async function getUserInfo(){
     const token = localStorage.getItem("token");
     res = await fetch(url, {
         headers:{
-            "Content-Type":"application/json",
             "Authorization":`Bearer ${token}`
         }
     });
