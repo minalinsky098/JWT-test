@@ -63,11 +63,17 @@ main {
     /* border: 1px solid red; */
     text-align: center;
     min-height: 50vh;
-    flex-grow: 1;
+    flex-wrap: wrap;
 }
 article{
     box-sizing: border-box;
     flex-grow: 1;
+    flex-basis: 33%;
     height: 30rem;
     padding: 1rem;
+}
+article img{
+  width: 5rem;
+  height: 5rem;
+  object-fit: cover;
 }
