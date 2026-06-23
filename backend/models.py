@@ -120,5 +120,6 @@ delete_user_responses = {
 fetch_cats_responses= {
     **general_response,
     401 : {"model": GeneralErrorModel, "description" : "Invalid credentials"},
-    404 : {"model": GeneralErrorModel, "description": "User not found"}
+    404 : {"model": GeneralErrorModel, "description": "User not found"},
+    502 : {"model": GeneralErrorModel, "description": "Upstream API error"}
 }
