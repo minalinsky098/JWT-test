@@ -2,12 +2,13 @@ import { showToast, createToast } from "./utils.js";
 const BASE_URL = `http://127.0.0.1:8000`;
 const DEV_MODE = true; //remove 
 const elements = {
-    logout: null
+    logout: null,
+    main : null
 }
 
 async function main(){ 
     await checkexpiry();
-    await getCats();
+
     createToast();
 
     const userStatus = window.localStorage.getItem("userstatus")
@@ -16,6 +17,8 @@ async function main(){
     const toastTitle = "Login Successful!";
 
     elements.logout = document.querySelector("#logout-link");
+    elements.main = document.querySelector("main");
+    await displayCats();
 
     let toastMessage = (user==="register")?"Welcome user":"Welcome back user";
 
@@ -30,17 +33,35 @@ async function main(){
 
     window.localStorage.setItem("userstatus", "online")
 }
+async function displayCats(){
+    const { main } = elements;
+    const cats = await getCats();
+    console.log(main);
+    console.log(cats);
+
+    cats.forEach((cat)=>{
+        console.log(cat.breed, cat.url, cat.description)
+        const article = document.createElement("article");
+        let title = document.createElement("h3");
+        let img = document.createElement("img");
+        let description = document.createElement("p");
+        title.textContent = cat.breed
+        img.src = cat.url
+        description.textContent = cat.description
+        article.append(title, img, description)
+        main.appendChild(article);
+    }) 
+}
 async function getCats(){
     const fetch_url = BASE_URL+"/api/v1/users/fetch";
     const token = localStorage.getItem("token");
-    let res = await fetch(fetch_url, {
+    const res = await fetch(fetch_url, {
         headers:{
         "Authorization": `Bearer ${token}`
         }
     })
-    let data = await res.json();
-    console.log(res);
-    console.log(data);
+    const data = await res.json();
+    return data.cats
 }
 
 function logoutHandler(){
