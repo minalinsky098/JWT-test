@@ -28,3 +28,24 @@ export function createToast(){
     document.body.appendChild(toast);
     toast.classList.add('toast');
 }
+
+export function set_cache(catlist){
+    localStorage.setItem("cats", JSON.stringify(catlist))
+}
+
+export function get_cache(){
+    const cats = localStorage.getItem("cats");
+    return cats ? JSON.parse(cats) : null;
+}
+
+export function cacheTTL(){
+    const now = Date.now()
+    localStorage.setItem("TTL", now);
+}
+
+export function check_TTL(){
+    const now = Date.now();
+    const ttl = localStorage.getItem("TTL");
+    if (now>ttl+300000) return true;
+    return false;
+}
