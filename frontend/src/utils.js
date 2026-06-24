@@ -35,7 +35,7 @@ export function set_cache(catlist){
 
 export function get_cache(){
     const cats = localStorage.getItem("cats");
-    return cats ? JSON.parse(cats) : null;
+    return (cats == "undefined") ? null : JSON.parse(cats);
 }
 
 export function cacheTTL(){
@@ -45,7 +45,7 @@ export function cacheTTL(){
 
 export function check_TTL(){
     const now = Date.now();
-    const ttl = localStorage.getItem("TTL");
-    if (now>ttl+300000) return true;
+    let ttl = localStorage.getItem("TTL");
+    if (now>parseInt(ttl)+300000) return true;
     return false;
 }
