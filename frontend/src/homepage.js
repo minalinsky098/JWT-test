@@ -44,7 +44,6 @@ async function displayCats(cats){
     const { main } = elements;
 
     cats.forEach((cat)=>{
-        console.log(cat.breed, cat.url, cat.description)
         const article = document.createElement("article");
         let title = document.createElement("h3");
         let img = document.createElement("img");
@@ -64,6 +63,26 @@ async function getCats(){
         "Authorization": `Bearer ${token}`
         }
     })
+    if (!res.ok){
+        let toastTitle = "Error";
+        let toastMessage = null;
+        switch (res.status){
+            case 401:
+                toastMessage = "Invalid credentials, please restart your session";
+                break;
+            case 404:
+                toastMessage = "You might have logged in without registering, please register first before using this app";
+                break;
+            case 500:
+                toastMessage = "An error has occured please contact the developer";
+                break;
+            case 502:
+                toastMessage = "There seems to be an issue with Cat API, please wait for a few minutes before trying again";
+                break;
+        }
+        showToast("error", toastTitle, toastMessage);
+        return;
+    }
     const data = await res.json();
     return data.cats
 }
