@@ -156,25 +156,6 @@ async def delete_user_by_id(user_id = Depends(get_current_user_id), connection =
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal server error")
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
 @app.get("/api/v1/users/fetch", status_code = 200, response_model = FetchCatsResponseModel, responses = fetch_cats_responses)
 async def get_cats(user_id = Depends(get_current_user_id), connection = Depends(get_db_conn)):
     try:
@@ -186,9 +167,8 @@ async def get_cats(user_id = Depends(get_current_user_id), connection = Depends(
     except HTTPException:
         raise
     except DatabaseError:
-        logger.error(str(e))
-        logger.error(str(e))
+        logger.error("DATABASE ERROR: ",str(e))
         raise HTTPException(status_code = 500, detail = "Internal Server Error")
     except CatAPIError as e:
-        logger.error(str(e))
+        logger.error("API ERROR: ",str(e))
         raise HTTPException(status_code = 502, detail = "Cat API Server Error")
