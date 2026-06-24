@@ -2,11 +2,17 @@
     box-sizing: border-box;
 }
 body{
+    margin: 0;
+    display: grid;
+    min-height: 100dvh;
     visibility: hidden;
     background: #EFECe4;
+    grid-template-rows: 60px 1fr;
+    grid-template-columns: 4rem 2fr;
 }
 
 header {
+    grid-column: 1 / -1; 
     background: transparent;
     min-height: 60px;     
     width: 100%;
@@ -39,22 +45,22 @@ nav{
     text-align: left;
     text-orientation: upright;
     align-items: center;
-    justify-content: center;
-    position: absolute;
+    justify-content: flex-start;
+    position: sticky;
     border-right: 1px solid #C4BFB2;
 }
 nav img{
+    margin-top: 10px;
     width: 3.5rem;     
     height: 3.5rem;
 }
 nav a {
-    padding: 0.75rem;
+    padding-top: 0.5rem;
     display: flex;
     justify-content: center;
 }
 
 main {
-    margin-left: 4rem; 
     font-family: 'Quicksand', sans-serif;
     display: flex;
     flex-direction: row;
@@ -73,7 +79,7 @@ article{
     padding: 1rem;
 }
 article img{
-  width: 15rem;
-  height: 15rem;
+  width: 25rem;
+  height: 25rem;
   object-fit: cover;
 }
