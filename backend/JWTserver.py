@@ -163,7 +163,6 @@ async def get_cats(user_id = Depends(get_current_user_id), connection = Depends(
         if not res:
             raise HTTPException(status_code= 404, detail="User not found")
         cats = await fetch_cats(limit = 20)
-        print(cats)
         return {"cats": cats}
     except HTTPException:
         raise
