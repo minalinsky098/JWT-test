@@ -1,4 +1,4 @@
-import { showToast, createToast, set_cache, get_cache, check_TTL, cacheTTL, get_favorite_cache, add_favorite_cache} from "./utils.js";
+import { showToast, createToast, set_cache, get_cache, check_TTL, cacheTTL, get_favorite_cache, add_favorite_cache, remove_favorite_cache} from "./utils.js";
 const BASE_URL = `http://127.0.0.1:8000`;
 const DEV_MODE = true; //remove 
 const elements = {
@@ -34,7 +34,7 @@ async function main(){
     toastMessage+= ` ${firstName} ${lastName}`;
 
     if (userStatus!=="online"){
-            showToast("success", toastTitle, toastMessage);
+        showToast("success", toastTitle, toastMessage);
     }
 
     elements.logout.addEventListener("click", logoutHandler);
@@ -60,6 +60,7 @@ async function displayCats(cats){
         heartButton.appendChild(hearticon);
         heartButton.id = `button${index}`;
         heartButton.addEventListener('click',(e)=>(buttonHandler(e, `${index}`)));
+        heartButton.setAttribute('aria-pressed', false);
         hearticon.src = "frontend/images/heartlogo.png";
         hearticon.classList.add("button-icon");
         description.textContent = cat.description;
@@ -102,17 +103,19 @@ async function getCats(){
 }
 function buttonHandler(e, index){
     console.log(`button${index} was clicked`)
+    const button = e.currentTarget;
     const article = document.querySelector(`#card${index}`);
     const title = article.querySelector("h3").textContent;
     const img = article.querySelector("img").src;
     const id = article.querySelector("img").id;
     const description = article.querySelector("p").textContent;
-    console.log(title, img, id, description);
-    if(id in get_favorite_cache()){
-        console.log("already favorited");
-        return;
+    if(JSON.parse(button.getAttribute('aria-pressed'))){
+        remove_favorite_cache(id);
     }
+    else{
     add_favorite_cache(id,{"title":title, "img":img,"description": description});
+    }
+    button.setAttribute('aria-pressed',!JSON.parse(button.getAttribute('aria-pressed')));
 }
 
 function logoutHandler(){
