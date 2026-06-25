@@ -43,15 +43,24 @@ async function main(){
 async function displayCats(cats){
     const { main } = elements;
 
-    cats.forEach((cat)=>{
+    cats.forEach((cat, index)=>{
         const article = document.createElement("article");
         let title = document.createElement("h3");
         let img = document.createElement("img");
+        let heartButton = document.createElement("button");
+        let hearticon = document.createElement("img");
         let description = document.createElement("p");
-        title.textContent = cat.breed
-        img.src = cat.url
-        description.textContent = cat.description
-        article.append(title, img, description)
+
+        title.textContent = cat.breed;
+        img.src = cat.url;
+        img.classList.add("cat-icon");
+        heartButton.appendChild(hearticon);
+        heartButton.id = `button${index}`
+        hearticon.src = "frontend/images/heartlogo.png"
+        hearticon.classList.add("button-icon");
+        description.textContent = cat.description;
+
+        article.append(title, img, heartButton, description);
         main.appendChild(article);
     }) 
 }
