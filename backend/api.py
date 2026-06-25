@@ -18,9 +18,11 @@ async def fetch_cats(limit: int = 45):
             data = res.json()
             normalized_fetch = []
             for cat in data:
-                normalized_fetch.append({"url":cat["url"], "breed":cat["breeds"][0]["name"], "description":cat["breeds"][0]["description"]})
+                normalized_fetch.append({"id":cat["id"],"url":cat["url"], "breed":cat["breeds"][0]["name"], "description":cat["breeds"][0]["description"]})
             return normalized_fetch
-    except (httpx.HTTPStatusError, httpx.RequestError) as e:
+    except (httpx.HTTPStatusError) as e:
+        raise CatAPIError from e
+    except (httpx.RequestError) as e:
         raise CatAPIError from e
     except Exception as e:
         raise 
