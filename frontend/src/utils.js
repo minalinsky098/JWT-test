@@ -30,6 +30,7 @@ export function createToast(){
 }
 
 export function set_cache(catlist){
+    if (!Array.isArray(catlist)) return;
     localStorage.setItem("cats", JSON.stringify(catlist))
 }
 
