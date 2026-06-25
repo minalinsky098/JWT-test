@@ -50,6 +50,11 @@ export function add_favorite_cache(catid, catinfo){
     favorites[catid] = catinfo;
     localStorage.setItem("favorites", JSON.stringify(favorites));
 }
+export function remove_favorite_cache(catid){
+    const favorites = JSON.parse(localStorage.getItem("favorites"));;
+    delete favorites[catid];
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+}
 
 export function cacheTTL(){
     const now = Date.now()
