@@ -72,14 +72,29 @@ main {
     flex-wrap: wrap;
 }
 article{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     box-sizing: border-box;
     flex-grow: 1;
     flex-basis: 33%;
     height: 40rem;
     padding: 1rem;
 }
-article img{
+article .cat-icon{
   width: 25rem;
   height: 25rem;
   object-fit: cover;
+}
+article button{
+    margin-top: 1rem;
+    width: 5rem;
+    height: 5rem;
+    padding: 0px;
+}
+article .button-icon{
+    width: 100%;
+    height: auto;
+    object-fit: cover;
 }
