@@ -55,8 +55,9 @@ async function displayCats(cats){
         img.src = cat.url;
         img.classList.add("cat-icon");
         heartButton.appendChild(hearticon);
-        heartButton.id = `button${index}`
-        hearticon.src = "frontend/images/heartlogo.png"
+        heartButton.id = `button${index}`;
+        heartButton.addEventListener('click',(e)=>(buttonHandler(e, `button${index}`)));
+        hearticon.src = "frontend/images/heartlogo.png";
         hearticon.classList.add("button-icon");
         description.textContent = cat.description;
 
@@ -94,6 +95,9 @@ async function getCats(){
     }
     const data = await res.json();
     return data.cats
+}
+function buttonHandler(e, id){
+    console.log(`${id} was clicked`)
 }
 
 function logoutHandler(){
