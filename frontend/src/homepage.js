@@ -28,6 +28,7 @@ async function main(){
         cacheTTL();
     }
     await displayCats(cats);
+    favorites_initial();
 
     let toastMessage = (user==="register")?"Welcome user":"Welcome back user";
 
@@ -41,6 +42,17 @@ async function main(){
     setInterval(checkexpiry, 60000)
 
     window.localStorage.setItem("userstatus", "online")
+}
+function favorites_initial(){
+    const {main} = elements;
+    const articles = main.querySelectorAll("article");
+    articles.forEach((article, index)=>{
+        const imgId = article.querySelector("img").id;
+        const heartButton = article.querySelector("button");
+        if (imgId in get_favorite_cache()){
+            heartButton.setAttribute('aria-pressed', true);
+        }
+    })
 }
 async function displayCats(cats){
     const { main } = elements;
@@ -69,6 +81,24 @@ async function displayCats(cats){
         article.id = `card${index}`;
         main.appendChild(article);
     }) 
+}
+function buttonHandler(e, index){
+    console.log(`button${index} was clicked`)
+    const article = document.querySelector(`#card${index}`);
+    const title = article.querySelector("h3").textContent;
+    const img = article.querySelector("img").src;
+    const id = article.querySelector("img").id;
+    const description = article.querySelector("p").textContent;
+    const button = e.currentTarget;
+    if(JSON.parse(button.getAttribute('aria-pressed'))){ //if its pressed/favorited, remove it
+        remove_favorite_cache(id);
+    }
+    else{
+    add_favorite_cache(id,{"title":title, "img":img,"description": description});
+    }
+    button.setAttribute('aria-pressed', !JSON.parse(button.getAttribute('aria-pressed')));//swaps the value for aria-pressed
+    let favorites = get_favorite_cache();
+    console.log(favorites);
 }
 async function getCats(){
     const fetch_url = BASE_URL+"/api/v1/users/fetch";
@@ -101,23 +131,6 @@ async function getCats(){
     const data = await res.json();
     return data.cats
 }
-function buttonHandler(e, index){
-    console.log(`button${index} was clicked`)
-    const button = e.currentTarget;
-    const article = document.querySelector(`#card${index}`);
-    const title = article.querySelector("h3").textContent;
-    const img = article.querySelector("img").src;
-    const id = article.querySelector("img").id;
-    const description = article.querySelector("p").textContent;
-    if(JSON.parse(button.getAttribute('aria-pressed'))){
-        remove_favorite_cache(id);
-    }
-    else{
-    add_favorite_cache(id,{"title":title, "img":img,"description": description});
-    }
-    button.setAttribute('aria-pressed',!JSON.parse(button.getAttribute('aria-pressed')));
-}
-
 function logoutHandler(){
     window.localStorage.setItem("userstatus", "offline");
     window.localStorage.removeItem("token")
