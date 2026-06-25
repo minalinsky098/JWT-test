@@ -38,6 +38,18 @@ export function get_cache(){
     return (cats == "undefined") ? null : JSON.parse(cats);
 }
 
+export function get_favorite_cache(){
+    if (!("favorites" in localStorage)){
+        localStorage.setItem("favorites", JSON.stringify({}));
+    }
+    return JSON.parse(localStorage.getItem("favorites"));
+}
+export function add_favorite_cache(catid, catinfo){
+    const favorites = JSON.parse(localStorage.getItem("favorites"));
+    favorites[catid] = catinfo;
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+}
+
 export function cacheTTL(){
     const now = Date.now()
     localStorage.setItem("TTL", now);

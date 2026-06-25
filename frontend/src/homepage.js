@@ -1,4 +1,4 @@
-import { showToast, createToast, set_cache, get_cache, check_TTL, cacheTTL } from "./utils.js";
+import { showToast, createToast, set_cache, get_cache, check_TTL, cacheTTL, get_favorite_cache, add_favorite_cache} from "./utils.js";
 const BASE_URL = `http://127.0.0.1:8000`;
 const DEV_MODE = true; //remove 
 const elements = {
@@ -18,7 +18,9 @@ async function main(){
 
     elements.logout = document.querySelector("#logout-link");
     elements.main = document.querySelector("main");
-    
+
+    let favorites = get_favorite_cache();
+    console.log(favorites);
     let cats = get_cache()
     if (cats == null || cats == "undefined" || check_TTL()){
         cats = await getCats();
@@ -54,14 +56,16 @@ async function displayCats(cats){
         title.textContent = cat.breed;
         img.src = cat.url;
         img.classList.add("cat-icon");
+        img.id = cat.id;
         heartButton.appendChild(hearticon);
         heartButton.id = `button${index}`;
-        heartButton.addEventListener('click',(e)=>(buttonHandler(e, `button${index}`)));
+        heartButton.addEventListener('click',(e)=>(buttonHandler(e, `${index}`)));
         hearticon.src = "frontend/images/heartlogo.png";
         hearticon.classList.add("button-icon");
         description.textContent = cat.description;
 
         article.append(title, img, heartButton, description);
+        article.id = `card${index}`;
         main.appendChild(article);
     }) 
 }
@@ -96,8 +100,19 @@ async function getCats(){
     const data = await res.json();
     return data.cats
 }
-function buttonHandler(e, id){
-    console.log(`${id} was clicked`)
+function buttonHandler(e, index){
+    console.log(`button${index} was clicked`)
+    const article = document.querySelector(`#card${index}`);
+    const title = article.querySelector("h3").textContent;
+    const img = article.querySelector("img").src;
+    const id = article.querySelector("img").id;
+    const description = article.querySelector("p").textContent;
+    console.log(title, img, id, description);
+    if(id in get_favorite_cache()){
+        console.log("already favorited");
+        return;
+    }
+    add_favorite_cache(id,{"title":title, "img":img,"description": description});
 }
 
 function logoutHandler(){
