@@ -23,8 +23,6 @@ async function main(){
 
     console.log(elements.sentinel);
 
-    observer.observe(elements.sentinel);
-
     let favorites = get_favorite_cache();
     let cats = get_cache();
     if (check_TTL()){
@@ -35,6 +33,12 @@ async function main(){
     cats = normalize_entires(favorites, cats);
     await displayCats(cats);
     favorites_initial();
+    const observer = new IntersectionObserver(handleIntersection, {
+    root: null,          // null = the browser viewport. Could be a scrollable div instead.
+    rootMargin: "1000px", // expands the root's box for intersection purposes
+    threshold: 0          // fire as soon as even 1px of the target is visible
+    });
+    observer.observe(elements.sentinel);
 
     let toastMessage = (user==="register")?"Welcome user":"Welcome back user";
 
@@ -49,17 +53,14 @@ async function main(){
 
     window.localStorage.setItem("userstatus", "online")
 }
-function handleIntersection(entries){
+async function handleIntersection(entries){
   const entry = entries[0];
   if (entry.isIntersecting) {
-    displayCats(cats) // your fetch + append logic
+    let cats = await getCats();
+    console.log(cats);
+    await displayCats(cats);
   }
 }
-const observer = new IntersectionObserver(handleIntersection, {
-  root: null,          // null = the browser viewport. Could be a scrollable div instead.
-  rootMargin: "200px", // expands the root's box for intersection purposes
-  threshold: 0          // fire as soon as even 1px of the target is visible
-});
 function normalize_entires(favorites, catlist){
     let normalized_list = [];
     for(const[id, value] of Object.entries(favorites)){
@@ -87,6 +88,9 @@ function favorites_initial(){
 async function displayCats(cats){
     const { main, sentinel } = elements;
 
+    const currentindex = main.childElementCount-1;
+    console.log(currentindex)
+
     cats.forEach((cat, index)=>{
         const article = document.createElement("article");
         let title = document.createElement("h3");
@@ -100,15 +104,15 @@ async function displayCats(cats){
         img.classList.add("cat-icon");
         img.id = cat.id;
         heartButton.appendChild(hearticon);
-        heartButton.id = `button${index}`;
-        heartButton.addEventListener('click',(e)=>(buttonHandler(e, `${index}`)));
+        heartButton.id = `button${index+currentindex}`;
+        heartButton.addEventListener('click',(e)=>(buttonHandler(e, `${index+currentindex}`)));
         heartButton.setAttribute('aria-pressed', false);
         hearticon.src = "frontend/images/heartlogo.png";
         hearticon.classList.add("button-icon");
         description.textContent = cat.description;
 
         article.append(title, img, heartButton, description);
-        article.id = `card${index}`;
+        article.id = `card${index+currentindex}`;
         main.insertBefore(article, sentinel);
     }) 
 }
