@@ -64,6 +64,7 @@ export function cacheTTL(){
 export function check_TTL(){
     const now = Date.now();
     let ttl = localStorage.getItem("TTL");
+    if (ttl == null) return true;
     if (now>parseInt(ttl)+300000) return true;
     return false;
 }
