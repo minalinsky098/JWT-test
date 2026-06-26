@@ -3,7 +3,8 @@ const BASE_URL = `http://127.0.0.1:8000`;
 const DEV_MODE = true; //remove 
 const elements = {
     logout: null,
-    main : null
+    main : null,
+    sentinel : null
 }
 
 async function main(){ 
@@ -18,6 +19,11 @@ async function main(){
 
     elements.logout = document.querySelector("#logout-link");
     elements.main = document.querySelector("main");
+    elements.sentinel = document.querySelector("#sentinel")
+
+    console.log(elements.sentinel);
+
+    observer.observe(elements.sentinel);
 
     let favorites = get_favorite_cache();
     let cats = get_cache();
@@ -43,6 +49,17 @@ async function main(){
 
     window.localStorage.setItem("userstatus", "online")
 }
+function handleIntersection(entries){
+  const entry = entries[0];
+  if (entry.isIntersecting) {
+    displayCats(cats) // your fetch + append logic
+  }
+}
+const observer = new IntersectionObserver(handleIntersection, {
+  root: null,          // null = the browser viewport. Could be a scrollable div instead.
+  rootMargin: "200px", // expands the root's box for intersection purposes
+  threshold: 0          // fire as soon as even 1px of the target is visible
+});
 function normalize_entires(favorites, catlist){
     let normalized_list = [];
     for(const[id, value] of Object.entries(favorites)){
@@ -68,7 +85,7 @@ function favorites_initial(){
     })
 }
 async function displayCats(cats){
-    const { main } = elements;
+    const { main, sentinel } = elements;
 
     cats.forEach((cat, index)=>{
         const article = document.createElement("article");
@@ -92,7 +109,7 @@ async function displayCats(cats){
 
         article.append(title, img, heartButton, description);
         article.id = `card${index}`;
-        main.appendChild(article);
+        main.insertBefore(article, sentinel);
     }) 
 }
 function buttonHandler(e, index){
