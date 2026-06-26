@@ -21,8 +21,6 @@ async function main(){
     elements.main = document.querySelector("main");
     elements.sentinel = document.querySelector("#sentinel")
 
-    console.log(elements.sentinel);
-
     let favorites = get_favorite_cache();
     let cats = get_cache();
     if (check_TTL()){
@@ -35,7 +33,7 @@ async function main(){
     favorites_initial();
     const observer = new IntersectionObserver(handleIntersection, {
     root: null,          // null = the browser viewport. Could be a scrollable div instead.
-    rootMargin: "1000px", // expands the root's box for intersection purposes
+    rootMargin: "100%", // expands the root's box for intersection purposes
     threshold: 0          // fire as soon as even 1px of the target is visible
     });
     observer.observe(elements.sentinel);
@@ -56,8 +54,8 @@ async function main(){
 async function handleIntersection(entries){
   const entry = entries[0];
   if (entry.isIntersecting) {
+    console.log("im fired")
     let cats = await getCats();
-    console.log(cats);
     await displayCats(cats);
   }
 }
@@ -89,7 +87,6 @@ async function displayCats(cats){
     const { main, sentinel } = elements;
 
     const currentindex = main.childElementCount-1;
-    console.log(currentindex)
 
     cats.forEach((cat, index)=>{
         const article = document.createElement("article");
