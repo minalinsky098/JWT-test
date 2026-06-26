@@ -20,15 +20,12 @@ async function main(){
     elements.main = document.querySelector("main");
 
     let favorites = get_favorite_cache();
-    console.log(favorites);
     let cats = get_cache();
     if (check_TTL()){
         cats = await getCats();
         set_cache(cats);
         cacheTTL();
     }
-    console.log(typeof(favorites));
-    console.log(cats);
     cats = normalize_entires(favorites, cats);
     await displayCats(cats);
     favorites_initial();
