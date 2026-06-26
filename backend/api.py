@@ -7,7 +7,7 @@ load_dotenv()
 CAT_API = os.getenv("CATAPI")
 BASE_URL = os.getenv("CATURL")
 
-async def fetch_cats(limit: int = 45):
+async def fetch_cats(limit: int = 45)->list:
     SEARCH_URL = f"{BASE_URL}/images/search"
     header = {"x-api-key":CAT_API}
     try:
