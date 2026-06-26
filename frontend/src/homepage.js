@@ -21,12 +21,15 @@ async function main(){
 
     let favorites = get_favorite_cache();
     console.log(favorites);
-    let cats = get_cache()
-    if (cats == null || cats == "undefined" || check_TTL()){
+    let cats = get_cache();
+    if (check_TTL()){
         cats = await getCats();
         set_cache(cats);
         cacheTTL();
     }
+    console.log(typeof(favorites));
+    console.log(cats);
+    cats = normalize_entires(favorites, cats);
     await displayCats(cats);
     favorites_initial();
 
@@ -42,6 +45,19 @@ async function main(){
     setInterval(checkexpiry, 60000)
 
     window.localStorage.setItem("userstatus", "online")
+}
+function normalize_entires(favorites, catlist){
+    let normalized_list = [];
+    for(const[id, value] of Object.entries(favorites)){
+        normalized_list.push({"id":id, "url":value.img,"description":value.description,"breed":value.title});
+    }
+    for (const cat of catlist) {
+        if (cat.id in favorites) {
+            continue; 
+        }
+        normalized_list.push(cat);
+    }
+    return normalized_list;
 }
 function favorites_initial(){
     const {main} = elements;
