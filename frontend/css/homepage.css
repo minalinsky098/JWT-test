@@ -103,3 +103,6 @@ article .button-icon{
     height: auto;
     object-fit: cover;
 }
+.sentinel {
+    height: 0px;
+}
