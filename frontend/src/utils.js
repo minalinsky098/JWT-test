@@ -35,8 +35,10 @@ export function set_cache(catlist){
 }
 
 export function get_cache(){
-    const cats = localStorage.getItem("cats");
-    return (cats == "undefined") ? null : JSON.parse(cats);
+    if (!("cats" in localStorage)){
+        localStorage.setItem("cats", JSON.stringify([]));
+    }
+    return JSON.parse(localStorage.getItem("cats"));
 }
 
 export function get_favorite_cache(){
