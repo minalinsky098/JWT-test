@@ -28,3 +28,45 @@ export function createToast(){
     document.body.appendChild(toast);
     toast.classList.add('toast');
 }
+
+export function set_cache(catlist){
+    if (!Array.isArray(catlist)) return;
+    localStorage.setItem("cats", JSON.stringify(catlist))
+}
+
+export function get_cache(){
+    if (!("cats" in localStorage)){
+        localStorage.setItem("cats", JSON.stringify([]));
+    }
+    return JSON.parse(localStorage.getItem("cats"));
+}
+
+export function get_favorite_cache(){
+    if (!("favorites" in localStorage)){
+        localStorage.setItem("favorites", JSON.stringify({}));
+    }
+    return JSON.parse(localStorage.getItem("favorites"));
+}
+export function add_favorite_cache(catid, catinfo){
+    const favorites = JSON.parse(localStorage.getItem("favorites"));
+    favorites[catid] = catinfo;
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+}
+export function remove_favorite_cache(catid){
+    const favorites = JSON.parse(localStorage.getItem("favorites"));;
+    delete favorites[catid];
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+}
+
+export function cacheTTL(){
+    const now = Date.now()
+    localStorage.setItem("TTL", now);
+}
+
+export function check_TTL(){
+    const now = Date.now();
+    let ttl = localStorage.getItem("TTL");
+    if (ttl == null) return true;
+    if (now>parseInt(ttl)+300000) return true;
+    return false;
+}

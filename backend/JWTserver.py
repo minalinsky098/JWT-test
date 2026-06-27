@@ -9,12 +9,13 @@ import jwt
 import os
 
 from models import LoginPayLoad ,RegisterPayLoad, UpdateUserPayload\
-,LoginAuthenticateResponseModel, GetAllUsersResponseModel, GetUserResponseModel, UpdateUserResponseModel, DeleteUserResponseModel\
-,auth_responses, login_responses, get_all_users_responses, get_user_responses, update_user_responses, delete_user_responses
+,LoginAuthenticateResponseModel, GetAllUsersResponseModel, GetUserResponseModel, UpdateUserResponseModel, DeleteUserResponseModel, FetchCatsResponseModel\
+,auth_responses, login_responses, get_all_users_responses, get_user_responses, update_user_responses, delete_user_responses, fetch_cats_responses
 from database import logger, select_all_users, create_new_user, select_user, update_user, delete_user
-from exceptions import DatabaseError
+from exceptions import DatabaseError, CatAPIError
 from auth import generate_jwt, check_password, decode_jwt_user_id\
 ,DATABASEURL
+from api import fetch_cats
 
 DEV_MODE = os.getenv("DEV_MODE", "false").lower() == "true"
 
@@ -154,4 +155,23 @@ async def delete_user_by_id(user_id = Depends(get_current_user_id), connection =
     except DatabaseError as e:
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="Internal server error")
-    
+  
+@app.get("/api/v1/users/fetch", status_code = 200, response_model = FetchCatsResponseModel, responses = fetch_cats_responses)
+async def get_cats(user_id = Depends(get_current_user_id), connection = Depends(get_db_conn)):
+    try:
+        res = await select_user(user_id = user_id, conn = connection)
+        if not res:
+            raise HTTPException(status_code= 404, detail="User not found")
+        cats = await fetch_cats(limit = 20)
+        return {"cats": cats}
+    except HTTPException:
+        raise
+    except DatabaseError:
+        logger.error("DATABASE ERROR: ",str(e))
+        raise HTTPException(status_code = 500, detail = "Internal Server Error")
+    except CatAPIError as e:
+        logger.error("API ERROR: ",str(e))
+        raise HTTPException(status_code = 502, detail = "Cat API Server Error")
+    except Exception:
+        logger.error("Execption ERROR: ",str(e))
+        raise HTTPException(status_code = 500, detail = "Internal Server Error")

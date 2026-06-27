@@ -74,6 +74,9 @@ class DeleteUserResponseModel(BaseModel):
     message: str
     id : UUID
     
+class FetchCatsResponseModel(BaseModel):
+    cats: list[dict]
+    
 #================================================
 #error_models  
 class GeneralErrorModel(BaseModel): #500
@@ -112,4 +115,11 @@ delete_user_responses = {
     **general_response,
     401 : {"model": GeneralErrorModel, "description" : "Invalid credentials"},
     404 : {"model": GeneralErrorModel, "description": "User not found"}
+}
+
+fetch_cats_responses= {
+    **general_response,
+    401 : {"model": GeneralErrorModel, "description" : "Invalid credentials"},
+    404 : {"model": GeneralErrorModel, "description": "User not found"},
+    502 : {"model": GeneralErrorModel, "description": "Upstream API error"}
 }

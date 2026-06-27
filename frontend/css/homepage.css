@@ -2,18 +2,24 @@
     box-sizing: border-box;
 }
 body{
+    margin: 0;
+    display: grid;
+    min-height: 100dvh;
     visibility: hidden;
     background: #EFECe4;
+    grid-template-rows: 60px 1fr;
+    grid-template-columns: 4rem 2fr;
 }
 
 header {
+    grid-column: 1 / -1; 
     background: transparent;
     min-height: 60px;     
     width: 100%;
     justify-content: center;
     display: flex;
     align-items: center;
-    border: 1px solid red;
+    /* border: 1px solid red; */
     padding: 1rem 2rem;
 }
 .leftlogo  { text-align: left;  flex: 1; }
@@ -30,6 +36,7 @@ header h1 {
     font-size: 2rem; 
 }
 nav{
+    width: 4rem;
     background: #DDD9CE;
     color: #171613;
     display: flex;
@@ -38,28 +45,64 @@ nav{
     text-align: left;
     text-orientation: upright;
     align-items: center;
-    justify-content: center;
-    position: fixed;
+    justify-content: flex-start;
+    position: sticky;
     border-right: 1px solid #C4BFB2;
 }
 nav img{
+    margin-top: 10px;
     width: 3.5rem;     
     height: 3.5rem;
 }
 nav a {
-    padding: 0.75rem;
+    padding-top: 0.5rem;
     display: flex;
     justify-content: center;
 }
 
 main {
-    margin-left: 200px; 
     font-family: 'Quicksand', sans-serif;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     /* border: 1px solid red; */
     text-align: center;
     min-height: 50vh;
+    flex-wrap: wrap;
+}
+article{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    flex-grow: 1;
+    flex-basis: 33%;
+    padding: 1rem;
+}
+article .cat-icon{
+  width: 20rem;
+  height: 20rem;
+  object-fit: cover;
+}
+article button{
+    transition: background-color 0.2s ease;
+    margin-top: 1rem;
+    border-radius: 50%;
+    width: 5rem;
+    height: 5rem;
+    padding: 0px;
+}
+article button[aria-pressed="true"] {
+  background-color: rgba(0, 0, 0, 0.18);
+  border-radius: 50%;
+}
+article .button-icon{
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+.sentinel {
+    height: 0px;
 }

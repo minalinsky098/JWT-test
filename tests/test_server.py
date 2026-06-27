@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch, AsyncMock
 from fastapi.testclient import TestClient
-from backend.exceptions import DatabaseError
+from backend.exceptions import DatabaseError, CatAPIError
 from backend.auth import decode_jwt_user_id, SECRET, ALGORITHM
 
 
@@ -89,3 +89,19 @@ async def test_update_user_not_found(client, setup_header):
 async def test_get_current_user(client, setup_header):
     res = client.get("/api/v1/users/me", headers=setup_header)
     assert res.status_code == 200
+    
+async def test_fetch_cats(client, setup_header):
+    res = client.get("/api/v1/users/fetch", headers=setup_header)
+    assert res.status_code == 200
+    
+async def test_api_error_fetch_cats(client, setup_header):
+    with patch("backend.JWTserver.fetch_cats", new_callable= AsyncMock) as mock:
+        mock.side_effect = CatAPIError("simulated upstream failure")
+        res = client.get("/api/v1/users/fetch", headers=setup_header)
+        assert res.status_code == 502
+        
+async def test_database_error_fetch_cats(client, setup_header):
+    with patch("backend.JWTserver.select_user", new_callable=AsyncMock) as mock:
+        mock.side_effect = DatabaseError("Failed operation")
+        res = client.get("/api/v1/users/fetch", headers=setup_header)
+        assert res.status_code == 500

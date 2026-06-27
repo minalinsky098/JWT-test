@@ -7,7 +7,6 @@ const elements = {
     logout: null
 }
 const token = localStorage.getItem("token");
-const DEV_MODE = true; //remove 
 
 async function main(){ 
     await checkexpiry();
@@ -96,6 +95,8 @@ async function updateUsername(event){
 }
 function logoutHandler(){
     window.localStorage.setItem("userstatus", "offline");
+    window.localStorage.removeItem("token");
+    window.location.href = "/";
 }
 function getTokenPayload(token){
     const payload = token.split(".")[1];
@@ -108,9 +109,6 @@ function setProfileName(username){
     elements.lastNameInput.value = lastName;
 }
 async function getUserInfo(){
-    if (DEV_MODE) {
-        return { firstName: "Dev", lastName: "User" };
-    }
     let url = BASE_URL+"/api/v1/users/me";
     let res = null;
     let data = null;
@@ -126,10 +124,6 @@ async function getUserInfo(){
 }
 
 async function checkexpiry(){
-    if (DEV_MODE) {
-        document.body.style.visibility = "visible";
-        return;
-    }
     console.log("Checking for expiry");
     const token = localStorage.getItem("token");
     if (!token) { 
