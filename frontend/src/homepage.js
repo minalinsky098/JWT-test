@@ -25,12 +25,11 @@ async function main(){
     let cats = get_cache();
     if (check_TTL()){
         cats = await getCats();
-        set_cache(cats);
         cacheTTL();
     }
-    cats = normalize_entires(favorites, cats);
+    cats = normalize_entires(favorites, cats); 
+    set_cache(cats);
     await displayCats(cats);
-    favorites_initial();
     const observer = new IntersectionObserver(handleIntersection, {
     root: null,          // null = the browser viewport. Could be a scrollable div instead.
     rootMargin: "100%", // expands the root's box for intersection purposes
@@ -55,17 +54,29 @@ async function handleIntersection(entries){
   const entry = entries[0];
   if (entry.isIntersecting) {
     console.log("im fired")
-    let cats = await getCats();
-    await displayCats(cats);
+    let cats = convert_to_object(await getCats());
+    let shownCats = get_cache();
+    console.log(cats)
+    cats = normalize_entires(cats,shownCats);
+    console.log(cats);
+    await displayCats(cats); // need to normalize entries
+    set_cache(cats);
   }
 }
-function normalize_entires(favorites, catlist){
+function convert_to_object(catlist){
+    let converted_obj = {};
+    catlist.forEach((cat)=>{
+        converted_obj[`${cat.id}`] = {"img":cat.url,"description":cat.description,"title": cat.breed};
+    })
+    return converted_obj;
+}
+function normalize_entires(entry, catlist){ // entry should be an object not array
     let normalized_list = [];
-    for(const[id, value] of Object.entries(favorites)){
+    for(const[id, value] of Object.entries(entry)){
         normalized_list.push({"id":id, "url":value.img,"description":value.description,"breed":value.title});
     }
     for (const cat of catlist) {
-        if (cat.id in favorites) {
+        if (cat.id in entry) {
             continue; 
         }
         normalized_list.push(cat);
@@ -112,6 +123,7 @@ async function displayCats(cats){
         article.id = `card${index+currentindex}`;
         main.insertBefore(article, sentinel);
     }) 
+    favorites_initial();
 }
 function buttonHandler(e, index){
     console.log(`button${index} was clicked`)
