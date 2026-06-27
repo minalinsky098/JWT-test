@@ -56,9 +56,7 @@ async function handleIntersection(entries){
     console.log("im fired")
     let cats = convert_to_object(await getCats());
     let shownCats = get_cache();
-    console.log(cats)
     cats = normalize_entires(cats,shownCats);
-    console.log(cats);
     await displayCats(cats); // need to normalize entries
     set_cache(cats);
   }
@@ -126,7 +124,6 @@ async function displayCats(cats){
     favorites_initial();
 }
 function buttonHandler(e, index){
-    console.log(`button${index} was clicked`)
     const article = document.querySelector(`#card${index}`);
     const title = article.querySelector("h3").textContent;
     const img = article.querySelector("img").src;
@@ -141,7 +138,6 @@ function buttonHandler(e, index){
     }
     button.setAttribute('aria-pressed', !JSON.parse(button.getAttribute('aria-pressed')));//swaps the value for aria-pressed
     let favorites = get_favorite_cache();
-    console.log(favorites);
 }
 async function getCats(){
     const fetch_url = BASE_URL+"/api/v1/users/fetch";
