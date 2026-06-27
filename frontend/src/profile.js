@@ -7,7 +7,6 @@ const elements = {
     logout: null
 }
 const token = localStorage.getItem("token");
-const DEV_MODE = true; //remove 
 
 async function main(){ 
     await checkexpiry();
@@ -125,10 +124,6 @@ async function getUserInfo(){
 }
 
 async function checkexpiry(){
-    if (DEV_MODE) {
-        document.body.style.visibility = "visible";
-        return;
-    }
     console.log("Checking for expiry");
     const token = localStorage.getItem("token");
     if (!token) { 

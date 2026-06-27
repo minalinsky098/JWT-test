@@ -1,6 +1,5 @@
 import { showToast, createToast, set_cache, get_cache, check_TTL, cacheTTL, get_favorite_cache, add_favorite_cache, remove_favorite_cache} from "./utils.js";
 const BASE_URL = `http://127.0.0.1:8000`;
-const DEV_MODE = true; //remove 
 const elements = {
     logout: null,
     main : null,
@@ -197,10 +196,6 @@ async function getUserInfo(){
 }
 
 async function checkexpiry(){
-    if (DEV_MODE) {
-        document.body.style.visibility = "visible";
-        return;
-    }
     const token = localStorage.getItem("token");
     if (!token) { 
         window.location.href = "/";
