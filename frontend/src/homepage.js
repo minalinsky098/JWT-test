@@ -31,7 +31,7 @@ async function main(){
     await displayCats(cats);
     const observer = new IntersectionObserver(handleIntersection, {
     root: null,          // null = the browser viewport. Could be a scrollable div instead.
-    rootMargin: "100%", // expands the root's box for intersection purposes
+    rootMargin: "0px 0px 600px 0px",
     threshold: 0          // fire as soon as even 1px of the target is visible
     });
     observer.observe(elements.sentinel);
@@ -152,6 +152,7 @@ async function getCats(){
         switch (res.status){
             case 401:
                 toastMessage = "Invalid credentials, please restart your session";
+                logoutHandler();
                 break;
             case 404:
                 toastMessage = "You might have logged in without registering, please register first before using this app";
